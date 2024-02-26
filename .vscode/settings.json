@@ -1,0 +1,20 @@
+// .vscode/settings.json
+{
+  "editor.formatOnSave": true,
+  "prettier.useEditorConfig": false,
+  "prettier.singleQuote": true,
+  "editor.tabSize": 2,
+  "cSpell.words": ["laravel", "Parens", "prittier", "tailwindcss"],
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    },
+    "editor.renderWhitespace": "boundary",
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true
+  },
+  "[php]": {
+    "editor.tabSize": 4
+  }
+}

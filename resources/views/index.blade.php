@@ -6,13 +6,12 @@
 
         <title>sample-api</title>
 
-        {{-- react に変更があったとき自動で --}}
         @viteReactRefresh
         @vite(['resources/sass/app.scss', 'resources/ts/index.tsx'])
 
     </head>
 
     <body class="antialiased">
-        <div id="app"></div><!-- Reactの埋め込み部分 -->
+        <div id="app"></div>
     </body>
 </html>
