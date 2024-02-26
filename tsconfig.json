@@ -10,8 +10,10 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["./resources/ts/*"]
-    }
+    },
+    "jsxImportSource": "@emotion/react"
   },
+  "files": ["./resources/ts/types/twin.d.ts"],
   "include": ["resources/ts/**/*"],
   "exclude": ["node_modules", "public"]
 }
