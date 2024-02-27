@@ -4,7 +4,21 @@
   "prettier.useEditorConfig": false,
   "prettier.singleQuote": true,
   "editor.tabSize": 2,
-  "cSpell.words": ["hoge", "laravel", "Parens", "prittier", "tailwindcss"],
+  "cSpell.words": [
+    "Barryvdh",
+    "docblocks",
+    "Heuvel",
+    "hoge",
+    "larastan",
+    "laravel",
+    "nowrite",
+    "nunomaduro",
+    "Parens",
+    "phpcs",
+    "phpstorm",
+    "prittier",
+    "tailwindcss"
+  ],
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.codeActionsOnSave": {

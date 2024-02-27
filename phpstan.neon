@@ -1,0 +1,15 @@
+includes:
+    - ./vendor/nunomaduro/larastan/extension.neon
+
+parameters:
+
+    paths:
+        - app/
+
+    # Level 9 is the highest level
+    level: 5
+    ignoreErrors:
+        - '#Unsafe usage of new static#'
+        - '#Call to an undefined static method Vimeo\\Laravel\\Facades\\Vimeo::[a-zA-Z0-9\\_]+\(\)#'
+    checkMissingIterableValueType: false
+    reportUnmatchedIgnoredErrors: false
