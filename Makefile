@@ -59,9 +59,13 @@ qa:
 	make pint
 	make lint
 
-.PHONY: generate_ide_helper
-generate_ide_helper:
+.PHONY: generate-ide-helper
+generate-ide-helper:
 		$(sail) artisan ide-helper:generate
 		$(sail) artisan ide-helper:models
 		$(sail) artisan ide-helper:meta
+
+.PHONY: dump-autoload
+dump-autoload:
+		$(sail) composer dump-autoload
 
