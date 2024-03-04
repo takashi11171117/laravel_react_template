@@ -17,6 +17,7 @@
     "phpcs",
     "phpstorm",
     "prittier",
+    "Queueable",
     "tailwindcss"
   ],
   "[javascript]": {
