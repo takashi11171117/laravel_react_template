@@ -20,7 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->appendToGroup('api', EnsureFrontendRequestsAreStateful::class);
-        $middleware->appendToGroup('api', 'throttle:api');
+        $middleware->appendToGroup('api', 'throttle:60:1');
         $middleware->appendToGroup('api', SubstituteBindings::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
