@@ -3,6 +3,9 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Routing\Middleware\ThrottleRequests;
+use Illuminate\Routing\Middleware\SubstituteBindings;
+use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -12,7 +15,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->alias([
+            'throttle' => ThrottleRequests::class,
+        ]);
+
+        $middleware->appendToGroup('api', EnsureFrontendRequestsAreStateful::class);
+        $middleware->appendToGroup('api', 'throttle:api');
+        $middleware->appendToGroup('api', SubstituteBindings::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

@@ -69,3 +69,7 @@ generate-ide-helper:
 dump-autoload:
 		$(sail) composer dump-autoload
 
+.PHONY: backend-route
+backend-route:
+		$(sail) artisan route:list
+
