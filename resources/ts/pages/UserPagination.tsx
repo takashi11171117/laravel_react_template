@@ -26,9 +26,8 @@ export const UserPagination = () => {
     queryFn: fetchUsers
   })
 
-  //1page当たりに表示させるUserの数
   const USERS_PER_PAGES = 4;
-  // 現在のページ番号
+  
   const [currentPage, setCurrentPage] = useState(0);
 
   if (isLoading) return <div>Loading...</div>;

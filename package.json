@@ -44,7 +44,6 @@
     "@emotion/server": "^11.11.0",
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.15.11",
-    "@tanstack/react-query": "^5.25.0",
-    "react-query": "^3.39.3"
+    "@tanstack/react-query": "^5.25.0"
   }
 }

@@ -10,7 +10,7 @@ export const LinkNavigation: React.FC = () => {
       <br />
       <Link to="page2">PAGE2</Link>
       <br />
-      <Link to="user">User</Link>
+      <Link to="users">User</Link>
     </div>
   );
 }
