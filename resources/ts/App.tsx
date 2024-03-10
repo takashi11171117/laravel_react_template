@@ -1,21 +1,17 @@
 import React, { useEffect } from 'react'
-import tw, { css } from 'twin.macro'
 import AppRouter from '@/AppRouter'
 import { LinkNavigation } from '@/LinkNavigation'
+import { ThemeProvider } from '@mui/material/styles'
+import { theme } from '@/components/theme'
 
 const App: React.FC = () => {
   useEffect(() => {}, [])
   return (
-    <div css={style}>
+    <ThemeProvider theme={theme}>
       <LinkNavigation />
       <AppRouter />
-    </div>
+    </ThemeProvider>
   )
 }
 
 export default App
-
-const style = css`
-  ${tw`mt-5`}
-  color: black;
-`
