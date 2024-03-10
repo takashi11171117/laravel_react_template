@@ -73,3 +73,7 @@ dump-autoload:
 backend-route:
 		$(sail) artisan route:list
 
+.PHONY: config-publish
+config-publish:
+		$(sail) artisan config:publish
+
