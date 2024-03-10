@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react'
+import { Link } from 'react-router-dom'
 
 export const LinkNavigation: React.FC = () => {
   return (
@@ -9,6 +9,8 @@ export const LinkNavigation: React.FC = () => {
       <Link to="page1">PAGE1</Link>
       <br />
       <Link to="page2">PAGE2</Link>
+      <br />
+      <Link to="auth/login">Login</Link>
     </div>
-  );
+  )
 }
