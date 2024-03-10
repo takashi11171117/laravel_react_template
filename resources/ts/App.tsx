@@ -4,7 +4,13 @@ import AppRouter from '@/AppRouter'
 import { LinkNavigation } from '@/LinkNavigation'
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnMount: true, 
+    },
+  },
+});
 
 const App: React.FC = () => {
   useEffect(() => {}, [])
