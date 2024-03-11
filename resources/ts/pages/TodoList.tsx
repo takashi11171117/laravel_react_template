@@ -27,7 +27,9 @@ export const TodoList = () => {
   const fetchTodos = async () => {
     try {
       const response = await axios.get('http://localhost/api/todos');
-      return response.data;
+      console.log(response);
+      //return response.data; //変更前
+      return response.data.data;
     } catch (error) {
       console.error('データを取得できませんでした:', error);
       throw new Error('データの取得に失敗しました');
@@ -154,6 +156,8 @@ export const TodoList = () => {
 
   if(data === undefined) return <div>data is undefined</div>
 
+  //console.log(data);
+
   /*
   新規作成の場合は、
   画面の名前、内容の入力欄に書き込んで作成ボタンを押します
@@ -174,7 +178,7 @@ export const TodoList = () => {
       <label>内容:
         <input value={content} onChange={handleContentCreation} />
       </label>
-      {data.map((todo: Todo) => (
+      {data.todos.map((todo: Todo) => (
         <div key={todo.id}>
           <div>
             <p>{todo.id}</p>
@@ -191,3 +195,18 @@ export const TodoList = () => {
   );
 }
 
+/*
+{data.todos.map((todo: Todo) => (
+        <div key={todo.id}>
+          <div>
+            <p>{todo.id}</p>
+            <p>{todo.name}</p>
+            <p>{todo.content}</p>
+          </div>
+          <div>
+            <button onClick={() => handleTodoDeletion(todo.id)}>削除</button>
+            <button onClick={() => handleTodoUpdate(todo)}>更新</button>
+          </div>
+        </div>
+      ))}
+*/

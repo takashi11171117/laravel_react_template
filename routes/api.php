@@ -22,8 +22,8 @@ Route::controller(UserController::class)->group(function () {
 Route::controller(TodoController::class)->group(function () {
     Route::get('/todos', 'index');
     Route::post('/todos', 'store');
-    Route::patch('/todos/{id}', 'update');
-    Route::delete('/todos/{id}', 'destroy');
+    Route::patch('/todos/{todo}', 'update');
+    Route::delete('/todos/{todo}', 'destroy');
 });
 
 

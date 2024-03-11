@@ -1,60 +1,45 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
 use App\Http\Requests\TodoRequest;
 use App\Models\Todo;
+use App\Http\Resources\Todo\TodoCollection;
+use App\Http\Resources\Todo\TodoResource;
+use App\UseCase\Todo\IndexAction;
+use App\UseCase\Todo\StoreAction;
+use App\UseCase\Todo\UpdateAction;
+use App\UseCase\Todo\DestroyAction;
+use Symfony\Component\HttpFoundation\Response;
 
 class TodoController extends Controller
 {
-    public function index()
+
+    public function index(IndexAction $action)
     {
-        $products = Todo::all();
-        return response()->json(
-            $products, 200
-        );
+        $todos = $action->handle();
+
+        return new TodoCollection($todos);
     }
 
-    public function store(TodoRequest $request)
+    public function store(TodoRequest $request, StoreAction $action)
     {
-        $todo = Todo::create($request->all());
-        return response()->json(
-            $todo, 201
-        );
+        $todo = $action->handle($request);
+
+        return new TodoResource($todo);
     }
 
-    public function update(TodoRequest $request, int $id)
+    public function update(Todo $todo,TodoRequest $request, UpdateAction $action)
     {
-        $update = [
-            'name' => $request->name,
-            'content' => $request->content,
-        ];
-        $todo = Todo::where('id', $id)->update($update);
-        $todos = Todo::all();
-        if ($todo) {
-            return response()->json(
-                $todos
-            , 200);
-        } else {
-            return response()->json([
-                'message' => 'The todo is not found',
-            ], 404);
-        }
+        $todos = $action->handle($request,$todo);
+
+        return new TodoCollection($todos);
     }
 
-    public function destroy(int $id)
+    public function destroy(Todo $todo, DestroyAction $action)
     {
-        $product = Todo::where('id', $id)->delete();
-        if ($product) {
-            return response()->json([
-                'message' => 'The todo was deleted successfully',
-            ], 200);
-        } else {
-            return response()->json([
-                'message' => 'The todo is not found',
-            ], 404);
-        }
-    }
 
+        $action->handle($todo);
+
+        return response()->json([], Response::HTTP_NO_CONTENT);
+    }
 }
