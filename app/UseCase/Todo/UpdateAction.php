@@ -15,8 +15,8 @@ class UpdateAction
         ];
         $todo->update($update);
 
-        $todos = Todo::all();
+        $updatedTodo = Todo::where("id",$todo->id)->first();
 
-        return $todos;
+        return $updatedTodo;
     }
 }

@@ -82,52 +82,6 @@ export const TodoList = () => {
     }
   }
 
-  const updateTodoMutation = useMutation({
-    mutationFn: (todo:Todo) => {
-      return axios
-        .patch(`http://localhost/api/todos/${todo.id}`, {
-          name: name,
-          content: content,
-        })
-        .then((response) => {
-          console.log(response)
-        })
-        .then(() => {
-          setName('');
-          setContent('');
-        })
-        .catch((error) => {console.log(error); alert(error.name.required)});
-    },
-  });
-
-  const handleTodoUpdate = async (todo:Todo) => {
-    try {
-      if(name === ''){
-        alert("名前は必ず入力して下さい");
-        return;
-      }
-      if(name.length > 10){
-        console.log(name.length)
-        alert("名前は必ず10文字以下にして下さい");
-        return;
-      }
-      if(content === ''){
-        setContent(todo.content)
-        console.log(content)
-      }
-      if(content.length > 50){
-        alert("内容は必ず50文字以下にして下さい");
-        return;
-      }
-      await updateTodoMutation.mutateAsync(todo);
-      
-      await queryClient.invalidateQueries({queryKey: ['todos']})
-
-    } catch (error) {
-      console.error('Todoの更新に失敗しました:', error);
-    }
-  }
-
   const deleteTodoMutation = useMutation({
     mutationFn: (id:number) => {
       return axios
@@ -159,13 +113,13 @@ export const TodoList = () => {
   新規作成の場合は、
   画面の名前、内容の入力欄に書き込んで作成ボタンを押します
   名前は１文字以上１０文字以下、内容は空欄でも構わずで５０字以内で書くように定めています
-  更新の場合は、
-  画面の名前、内容の入力欄に書き込んで更新したいtodoの下にある更新ボタンを押します
-  入力情報のルールは新規作成と全く同じです。
   削除の場合は、
   削除したいtodoの下にある削除ボタンを押します
-  名前をクリックすると、
-  todo一覧から個々のtodoページに移動します
+  個々のtodoページに移動するには、
+  名前をクリックすると、todo一覧から個々のtodoページに移動します
+  更新の場合は、
+  todo一覧から個々のtodoページに移動して、画面の名前と内容の入力欄に書き込んで、更新ボタンを押します
+  入力情報のルールは新規作成と全く同じです。
   */
   return (
     <div>
@@ -181,12 +135,11 @@ export const TodoList = () => {
         <div key={todo.id}>
           <div>
             <p>{todo.id}</p>
-            <Link to={`/todos/${todo.id}`} state={{ todo: {todo} }} >{todo.name}</Link>
+            <Link to={`/todos/${todo.id}`} state={{ todoId: todo.id }} >{todo.name}</Link>
             <p>{todo.content}</p>
           </div>
           <div>
             <button onClick={() => handleTodoDeletion(todo.id)}>削除</button>
-            <button onClick={() => handleTodoUpdate(todo)}>更新</button>
           </div>
         </div>
       ))}

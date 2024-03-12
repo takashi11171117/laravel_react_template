@@ -6,6 +6,7 @@ use App\Models\Todo;
 use App\Http\Resources\Todo\TodoCollection;
 use App\Http\Resources\Todo\TodoResource;
 use App\UseCase\Todo\IndexAction;
+use App\UseCase\Todo\ShowAction;
 use App\UseCase\Todo\StoreAction;
 use App\UseCase\Todo\UpdateAction;
 use App\UseCase\Todo\DestroyAction;
@@ -21,6 +22,13 @@ class TodoController extends Controller
         return new TodoCollection($todos);
     }
 
+    public function show(ShowAction $action,int $id)
+    {
+        $todo = $action->handle($id);
+
+        return new TodoResource($todo);
+    }
+
     public function store(TodoRequest $request, StoreAction $action)
     {
         $todo = $action->handle($request);
@@ -30,9 +38,9 @@ class TodoController extends Controller
 
     public function update(Todo $todo,TodoRequest $request, UpdateAction $action)
     {
-        $todos = $action->handle($request,$todo);
+        $updatedTodo = $action->handle($request,$todo);
 
-        return new TodoCollection($todos);
+        return new TodoResource($updatedTodo);
     }
 
     public function destroy(Todo $todo, DestroyAction $action)

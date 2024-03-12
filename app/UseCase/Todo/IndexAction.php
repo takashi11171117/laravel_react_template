@@ -2,7 +2,6 @@
 
 namespace App\UseCase\Todo;
 
-use App\Http\Resources\Todo\TodoCollection;
 use App\Models\Todo;
 use Illuminate\Database\Eloquent\Collection;
 
