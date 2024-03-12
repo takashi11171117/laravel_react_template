@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useQuery, useMutation,useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 type Todo = {
   id: number
@@ -27,8 +28,6 @@ export const TodoList = () => {
   const fetchTodos = async () => {
     try {
       const response = await axios.get('http://localhost/api/todos');
-      console.log(response);
-      //return response.data; //変更前
       return response.data.data;
     } catch (error) {
       console.error('データを取得できませんでした:', error);
@@ -156,8 +155,6 @@ export const TodoList = () => {
 
   if(data === undefined) return <div>data is undefined</div>
 
-  //console.log(data);
-
   /*
   新規作成の場合は、
   画面の名前、内容の入力欄に書き込んで作成ボタンを押します
@@ -167,6 +164,8 @@ export const TodoList = () => {
   入力情報のルールは新規作成と全く同じです。
   削除の場合は、
   削除したいtodoの下にある削除ボタンを押します
+  名前をクリックすると、
+  todo一覧から個々のtodoページに移動します
   */
   return (
     <div>
@@ -182,7 +181,7 @@ export const TodoList = () => {
         <div key={todo.id}>
           <div>
             <p>{todo.id}</p>
-            <p>{todo.name}</p>
+            <Link to={`/todos/${todo.id}`} state={{ todo: {todo} }} >{todo.name}</Link>
             <p>{todo.content}</p>
           </div>
           <div>
@@ -194,19 +193,3 @@ export const TodoList = () => {
     </div>
   );
 }
-
-/*
-{data.todos.map((todo: Todo) => (
-        <div key={todo.id}>
-          <div>
-            <p>{todo.id}</p>
-            <p>{todo.name}</p>
-            <p>{todo.content}</p>
-          </div>
-          <div>
-            <button onClick={() => handleTodoDeletion(todo.id)}>削除</button>
-            <button onClick={() => handleTodoUpdate(todo)}>更新</button>
-          </div>
-        </div>
-      ))}
-*/
