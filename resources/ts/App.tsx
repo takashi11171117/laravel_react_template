@@ -2,13 +2,24 @@ import React, { useEffect } from 'react'
 import tw, { css } from 'twin.macro'
 import AppRouter from '@/AppRouter'
 import { LinkNavigation } from '@/LinkNavigation'
+import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnMount: true, 
+    },
+  },
+});
 
 const App: React.FC = () => {
   useEffect(() => {}, [])
   return (
     <div css={style}>
-      <LinkNavigation />
-      <AppRouter />
+      <QueryClientProvider client={queryClient}>
+        <LinkNavigation />
+        <AppRouter />
+      </QueryClientProvider>
     </div>
   )
 }
