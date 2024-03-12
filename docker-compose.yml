@@ -34,6 +34,8 @@ services:
       - '.:/var/www/html'
     networks:
       - sail
+    dns:
+      - 8.8.8.8
     depends_on:
       - mysql
       - mailpit

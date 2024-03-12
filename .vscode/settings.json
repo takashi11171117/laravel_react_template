@@ -6,10 +6,13 @@
   "editor.tabSize": 2,
   "cSpell.words": [
     "Barryvdh",
+    "clsx",
     "delaycompress",
     "docblocks",
     "endscript",
     "fontsource",
+    "headlessui",
+    "heroicons",
     "Heuvel",
     "hoge",
     "larastan",
@@ -40,5 +43,7 @@
   },
   "[php]": {
     "editor.tabSize": 4
-  }
+  },
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
