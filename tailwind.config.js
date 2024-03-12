@@ -1,16 +1,21 @@
-const colors = require('tailwindcss/colors')
+const defaultTheme = require('tailwindcss/defaultTheme')
 
 module.exports = {
-  darkMode: 'class',
+  mode: 'jit',
+  purge: [
+    './resources/**/*.{js,jsx,ts,tsx}',
+    './resources/views/index.blade.php',
+  ],
+  darkMode: false,
   theme: {
     extend: {
-      screens: {
-        xs: '425px',
+      fontFamily: {
+        sans: ['Inter var', ...defaultTheme.fontFamily.sans],
       },
     },
   },
   variants: {
     extend: {},
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/typography')],
 }

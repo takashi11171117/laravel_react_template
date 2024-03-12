@@ -10,7 +10,8 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["./resources/ts/*"]
-    }
+    },
+    "types": ["@emotion/react/types/css-prop"]
   },
   "files": ["./resources/ts/types/twin.d.ts"],
   "include": ["resources/ts/**/*"],
