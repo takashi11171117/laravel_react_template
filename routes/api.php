@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\TodoController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ImageController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,6 +26,14 @@ Route::controller(TodoController::class)->group(function () {
     Route::post('/todos', 'store');
     Route::patch('/todos/{todo}', 'update');
     Route::delete('/todos/{todo}', 'destroy');
+});
+
+Route::controller(ImageController::class)->group(function () {
+    Route::get('/images', 'index')->name('images.index');
+    Route::get('/images/{id}', 'show')->name('images.show');
+    Route::post('/images', 'store')->name('images.store');
+    Route::patch('/images/{image}', 'update')->name('images.update');
+    Route::delete('/images/{image}', 'destroy')->name('images.destroy');
 });
 
 
