@@ -31,5 +31,6 @@
   },
   "[php]": {
     "editor.tabSize": 4
-  }
+  },
+  "i18next.i18nPaths": "/Users/akira/laravel-dev/resources/lang,/Users/akira/laravel-dev/vendor/phpmyadmin/sql-parser/locale,/Users/akira/laravel-dev/vendor/laravel/framework/src/Illuminate/Translation/lang"
 }

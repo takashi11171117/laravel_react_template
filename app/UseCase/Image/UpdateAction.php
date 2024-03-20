@@ -3,6 +3,7 @@
 namespace App\UseCase\Image;
 
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 use App\Models\Image;
 use App\Http\Requests\ImageRequest;
 use Intervention\Image\ImageManager;
@@ -13,21 +14,31 @@ class UpdateAction
 {
     public function handle(ImageRequest $request, Image $image)
     {
-        
-        $requestedImage = $request->image;
+        return DB::transaction(function () use ($request,$image) {
+            $imageFile = $request->image;
 
-        $manager = new ImageManager(new Driver());
+            $manager = new ImageManager(new Driver());
 
-        $imageData = $manager->read($requestedImage);
+            $managedImage = $manager->read($imageFile);
 
-        $resizedImage = $imageData->resize(1920, 1080)->encode();
+            $resizedImage = $managedImage->resize(1920, 1080)->encode();
 
-        if(!is_null($requestedImage) && $requestedImage->isValid() ){
-            Storage::put($image->filename, $resizedImage);
-        } 
+            if (!is_null($imageFile) && $imageFile->isValid()) {
+                Storage::disk('public')->delete('images/' . $image->filename);
+                Storage::put('public/images/' . $request->filename, $resizedImage);
+            }
 
-        $updatedImage = $image;
+            /*
+            $imageData = [
+                'title' => $request->title,
+                'filename' => $request->filename,
+            ];
+            */
 
-        return $updatedImage;
+            $image->update($request->validated());
+            $updatedImage = Image::find($image->id);
+
+            return $updatedImage;
+        });
     }
 }

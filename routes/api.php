@@ -21,18 +21,20 @@ Route::controller(UserController::class)->group(function () {
 });
 
 Route::controller(TodoController::class)->group(function () {
-    Route::get('/todos', 'index');
-    Route::get('/todos/{id}','show');
-    Route::post('/todos', 'store');
-    Route::patch('/todos/{todo}', 'update');
-    Route::delete('/todos/{todo}', 'destroy');
+    Route::get('/todos', 'index')->name('todos.index');
+    Route::get('/todos/{id}','show')->name('todos.show');
+    Route::post('/todos/{todo}', 'storeImage')->name('todos.store_image');
+    Route::post('/todos', 'store')->name('todos.store');
+    Route::put('/todos/{todo}', 'update')->name('todos.update');
+    Route::delete('/todos/{todo}', 'destroy')->name('todos.destroy');
 });
 
 Route::controller(ImageController::class)->group(function () {
     Route::get('/images', 'index')->name('images.index');
     Route::get('/images/{id}', 'show')->name('images.show');
     Route::post('/images', 'store')->name('images.store');
-    Route::patch('/images/{image}', 'update')->name('images.update');
+    Route::post('/images', 'store')->name('images.store_and_attach_to_todo');
+    Route::put('/images/{image}', 'update')->name('images.update');
     Route::delete('/images/{image}', 'destroy')->name('images.destroy');
 });
 

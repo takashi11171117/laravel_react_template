@@ -21,9 +21,10 @@ class ImageRequest extends FormRequest
      */
     public function rules(): array
     {
+
         return [
-            'title' => 'max:50',
-            'filename' => 'required',
+            'title' => 'max:10',
+            'filename' => 'required|max:50',
             'image' => 'image|mimes:jpg,jpeg,png|max:2048',
             'files.*.image' => 'required|image|mimes:jpg,jpeg,png|max:2048'
         ];

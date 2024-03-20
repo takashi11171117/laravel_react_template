@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title')->nullable();
             $table->string('filename');
+            $table->foreignId('todo_id')->constrained('todos')->onDelete('cascade');
             $table->timestamps();
         });
     }

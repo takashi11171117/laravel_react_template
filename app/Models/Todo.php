@@ -13,4 +13,9 @@ class Todo extends Model
         'name',
         'content',
     ];
+
+    public function images()
+    {
+        return $this->hasMany(Image::class);
+    }
 }

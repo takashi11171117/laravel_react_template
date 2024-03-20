@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 use App\Http\Requests\TodoRequest;
+use App\Http\Requests\ImageRequest;
 use App\Models\Todo;
 use App\Http\Resources\Todo\TodoCollection;
 use App\Http\Resources\Todo\TodoResource;
 use App\UseCase\Todo\IndexAction;
 use App\UseCase\Todo\ShowAction;
 use App\UseCase\Todo\StoreAction;
+use App\UseCase\Todo\StoreImageAction;
 use App\UseCase\Todo\UpdateAction;
 use App\UseCase\Todo\DestroyAction;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,8 +38,20 @@ class TodoController extends Controller
         return new TodoResource($todo);
     }
 
+    public function storeImage(Todo $todo,ImageRequest $request, StoreImageAction $action)
+    {
+
+        logger()->info('storeImage'); 
+
+        $todo = $action->handle($request,$todo);
+
+        return new TodoResource($todo);
+    }
+
     public function update(Todo $todo,TodoRequest $request, UpdateAction $action)
     {
+        logger()->info('update'); 
+
         $updatedTodo = $action->handle($request,$todo);
 
         return new TodoResource($updatedTodo);
