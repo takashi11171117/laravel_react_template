@@ -1,21 +1,20 @@
 <?php
 
-namespace App\UseCase\Image;
+namespace App\UseCase\Todo;
 
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\DB;
 use App\Models\Image;
+use App\Models\Todo;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\ImageRequest;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 
-class UpdateAction
+class UpdateImageAction
 {
-    public function handle(ImageRequest $request, Image $image)
+    public function handle(Todo $todo, Image $image, ImageRequest $request)
     {
-
-        return DB::transaction(function () use ($request,$image) {
-
+        return DB::transaction(function () use ($todo, $image, $request) {
             if($request->has('image')){
                 $imageFile = $request->image;
 
@@ -40,9 +39,8 @@ class UpdateAction
             ];
 
             $image->update($imageData);
-            $updatedImage = Image::find($image->id);
 
-            return $updatedImage;
+            return $todo;
         });
     }
 }

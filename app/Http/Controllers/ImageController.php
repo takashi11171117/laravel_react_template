@@ -10,10 +10,8 @@ use App\Http\Resources\Image\ImageResource;
 use App\Http\Resources\Image\ImageCollection;
 use App\UseCase\Image\IndexAction;
 use App\UseCase\Image\StoreAction;
-use App\UseCase\Image\StoreAndAttachToTodoAction;
 use App\UseCase\Image\UpdateAction;
 use App\UseCase\Image\DestroyAction;
-use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class ImageController extends Controller
@@ -33,6 +31,7 @@ class ImageController extends Controller
 
     public function store(ImageRequest $request, StoreAction $action)
     {
+
         $storedImage = $action->handle($request);
 
         return new ImageResource($storedImage);
@@ -50,7 +49,7 @@ class ImageController extends Controller
 
     public function update(Image $image,ImageRequest $request, UpdateAction $action)
     {
-        //
+
         $updatedImage = $action->handle($request,$image);
 
         return new ImageResource($updatedImage);
@@ -58,7 +57,7 @@ class ImageController extends Controller
 
     public function destroy(Image $image, DestroyAction $action)
     {
-        //
+
         $action->handle($image);
 
         return response()->json([], Response::HTTP_NO_CONTENT);

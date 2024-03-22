@@ -23,7 +23,7 @@ export const TodoDetail = () => {
 
   const todoId  = location.state.todoId
 
-  console.log(`todoId = ${todoId}`);
+  //console.log(`todoId = ${todoId}`);
 
   const [name, setName] = useState('');
   const handleNameCreation = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,7 +44,6 @@ export const TodoDetail = () => {
       setImage(selectedImage);
       console.log(selectedImage);
     }
-    alert("handleImageFileNameCreation");
   };
 
   const [title, setTitle] = useState('');
@@ -61,12 +60,15 @@ export const TodoDetail = () => {
 
 
   const [updatedTitle, setUpdatedTitle] = useState('');
-  const handleImageUpdatedTitleCreation = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUpdatedTitle(e.target.value);
-    console.log(e.target.value);
+
+  const [updatedFilename, setUpdatedFilename] = useState('');
+
+
+  const handleUpdatedImageInfo = (title:string, filename:string) => {
+    setUpdatedTitle(title);
+    setUpdatedFilename(filename);
+    console.log(`updatedTitle: ${title}---updatedFilename: ${filename}`);
   };
-
-
 
   const queryClient = useQueryClient();
 
@@ -85,11 +87,13 @@ export const TodoDetail = () => {
     queryFn: () => fetchTodo(todoId)
   })
 
+  /*
   const fetchImages = async () => {
     try {
       const response = await axios.get('http://localhost/api/images');
-      //console.log(response.data.images);
-      return response.data.images;
+      console.log("images成功している");
+      console.log(response.data.data.images);
+      return response.data.data.images;
     } catch (error) {
       console.error('データを取得できませんでした:', error);
       throw new Error('データの取得に失敗しました');
@@ -100,6 +104,7 @@ export const TodoDetail = () => {
     queryKey: ['images'],
     queryFn: () => fetchImages()
   })
+  */
 
   const updateTodoMutation = useMutation({
     mutationFn: (id:number) => {
@@ -153,14 +158,10 @@ export const TodoDetail = () => {
         formData.append('filename', filename);
       }
 
-      formData.forEach(element => {
-        console.log(element);
-      });
-      
       return axios
         .post(`http://localhost/api/todos/${id}`, formData,{
           headers: {
-            'Content-Type': 'multipart/form-data', // フォームデータを送信する際にはContent-Typeを設定する必要があります
+            'Content-Type': 'multipart/form-data', 
           },
         })
         .then((response) => {
@@ -170,7 +171,7 @@ export const TodoDetail = () => {
           setTitle('');
           setFileName('');
         })
-        .catch((error) => {console.log("ここが動いたよ");console.log(error); console.log(error.response.data); alert(error.name.required)});
+        .catch((error) => {console.log(error); console.log(error.response.data); alert(error.response.data.message)});
         },
   });
 
@@ -191,10 +192,13 @@ export const TodoDetail = () => {
         alert("imageFileNameは必ず50文字以下にして下さい");
         return;
       }
+      
 
       await storeImageForTodoMutation.mutateAsync(todoId);
       
       await queryClient.invalidateQueries({queryKey: ['todo']})
+
+      setImage(null);
 
     } catch (error) {
       console.error('Todoの画像保存に失敗しました:', error);
@@ -202,23 +206,68 @@ export const TodoDetail = () => {
   }
 
   const updateImageForTodoMutation = useMutation({
-    mutationFn: (id:number) => {
-      return axios
-        .put(`http://localhost/api/images/${id}`)
+    mutationFn: ({ todoId, imageId }: { todoId: number, imageId: number }) => {
+      
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data', 
+        },
+      };
+    
+      const formData = new FormData();
+      
+      if(image !== null){ 
+        console.log(`updatedTitle: ${updatedTitle}`);
+        console.log(`updatedFilename: ${updatedFilename}`)
+        formData.append('image',image); 
+        formData.append('title', updatedTitle);
+        formData.append('filename', updatedFilename);
+
+        return axios
+        .post(`http://localhost/api/todos/${todoId}/${imageId}`, formData, config)
         .then((response) => {
           console.log(response)
         })
         .catch((error) => {console.log(error); alert(error.name.required)});
+      }
+      else{
+        return axios
+        .post(`http://localhost/api/todos/${todoId}/${imageId}`, {
+          title: updatedTitle,
+          filename: updatedFilename,
+        } )
+        .then((response) => {
+          console.log(response)
+        })
+        .catch((error) => {console.log(error); alert(error.name.required)});
+      }
     },
   });
 
-  const handleImageForTodoUpdate = async (id:number) => {
+  const handleImageForTodoUpdate = async (todoId:number,imageId:number) => {
     try {
 
-      await updateImageForTodoMutation.mutateAsync(id);
+      if(updatedTitle.length > 10){
+        console.log(updatedTitle.length)
+        alert("名前は必ず10文字以下にして下さい");
+        return;
+      }
+
+      if (!/\.(jpg|jpeg|png)$/i.test(updatedFilename)) {
+        alert('有効なファイル形式は .jpg, .jpeg, .png です。');
+        return;
+      }
+
+      if(updatedFilename.length > 50){
+        alert("imageFileNameは必ず50文字以下にして下さい");
+        return;
+      }
+
+      await updateImageForTodoMutation.mutateAsync({todoId,imageId});
       
-      await queryClient.invalidateQueries({queryKey: ['images']})
       await queryClient.invalidateQueries({queryKey: ['todo']})
+
+      setImage(null);
 
     } catch (error) {
       console.error('画像テーブルデータ更新に失敗しました:', error);
@@ -241,8 +290,8 @@ export const TodoDetail = () => {
 
       await deleteImageForTodoMutation.mutateAsync(id);
       
-      await queryClient.invalidateQueries({queryKey: ['images']})
       await queryClient.invalidateQueries({queryKey: ['todo']})
+      //await queryClient.invalidateQueries({queryKey: ['images']})
 
     } catch (error) {
       console.error('画像テーブルデータ削除に失敗しました:', error);
@@ -277,7 +326,7 @@ export const TodoDetail = () => {
       processedFilename: processedFilenames[index]
     };
   });
-  console.log(imageInfos);
+  //console.log(imageInfos);
 
   /*
   更新の場合は、
@@ -313,37 +362,16 @@ export const TodoDetail = () => {
           <p>{imageInfo.id}</p>
           <p>{imageInfo.title}</p>
           <p>{imageInfo.rawFilename}</p>
-          <TodoInputForUpdate title = {updatedTitle}  />
-          <button onClick={() => {handleImageForTodoDeletion(imageInfo.id); console.log(imageInfo.id)}} type="button">削除する</button>
           <label htmlFor="image">画像</label>
+          <input onChange={handleImageCreation} type="file" id="image" name="image" required accept="image/png, image/jpeg, image/jpg" />
+          <TodoInputForUpdate  updatedTitle = {updatedTitle} updatedFilename = {updatedFilename} title = {imageInfo.title} filename = {imageInfo.rawFilename} handleOnClick= {handleUpdatedImageInfo} 
+          setUpdatedTitle = { setUpdatedTitle } setUpdatedFilename = { setUpdatedFilename } />
+          <button onClick={() => handleImageForTodoUpdate(todo.id,imageInfo.id)} type="button">更新する</button>
+          <br/>
+          <button onClick={() => {handleImageForTodoDeletion(imageInfo.id); console.log(imageInfo.id)}} type="button">削除する</button>
         </div>
       ))}
     </div>
   )
 }
 
-/*
-handleImageCreation
-
-            <input value={imageInfo.title} onChange={handleImageTitleCreation} type="text" id="title" name="title" />
-*/
-/*
-{imageInfos.map((imageInfo:Image, index: number) => (
-  <div key={index}>
-    <p>{imageInfo.id}</p>
-    <p>{imageInfo.title}</p>
-    <p>{imageInfo.rawFilename}</p>
-    <TodoInputForUpdate title = {updatedTitle} handleOnChange = {handleImageUpdatedTitleCreation} />
-  </div>
-))}
-*/
-/*
-{imageInfos.map((imageInfo:Image, index: number) => (
-  <div key={index}>
-    <img src={imageInfo.processedFilename}/>
-    <p>{imageInfo.id}</p>
-    <button onClick={() => {handleImageForTodoDeletion(imageInfo.id); console.log(imageInfo.id)}} type="button">削除する</button>
-    <label htmlFor="image">画像</label>
-  </div>
-))}
-*/

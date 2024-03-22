@@ -14,7 +14,10 @@ class StoreAction
 {
     public function handle(ImageRequest $request)
     {
+
         return DB::transaction(function () use ($request) {
+
+
             $imageFile = $request->image;
 
             $manager = new ImageManager(new Driver());
