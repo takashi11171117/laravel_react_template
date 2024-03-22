@@ -31,7 +31,7 @@ Route::controller(TodoController::class)->group(function () {
     Route::delete('/todos/{todo}/{image}', 'destroyImage')->name('todos.destroy_image');
 });
 
-/*
+
 Route::controller(ImageController::class)->group(function () {
     Route::get('/images', 'index')->name('images.index');
     Route::get('/images/{id}', 'show')->name('images.show');
@@ -39,8 +39,6 @@ Route::controller(ImageController::class)->group(function () {
     Route::post('/images/{image}', 'update')->name('images.update');
     Route::delete('/images/{image}', 'destroy')->name('images.destroy');
 });
-*/
-
 
 
 Route::middleware(['auth:sanctum'])->get('/me', function (Request $request) {
