@@ -87,25 +87,6 @@ export const TodoDetail = () => {
     queryFn: () => fetchTodo(todoId)
   })
 
-  /*
-  const fetchImages = async () => {
-    try {
-      const response = await axios.get('http://localhost/api/images');
-      console.log("images成功している");
-      console.log(response.data.data.images);
-      return response.data.data.images;
-    } catch (error) {
-      console.error('データを取得できませんでした:', error);
-      throw new Error('データの取得に失敗しました');
-    }
-  }
-
-  const { data:imageData, isLoading:isLoadingForImage, isError:isErrorForImage } = useQuery({
-    queryKey: ['images'],
-    queryFn: () => fetchImages()
-  })
-  */
-
   const updateTodoMutation = useMutation({
     mutationFn: (id:number) => {
       return axios
