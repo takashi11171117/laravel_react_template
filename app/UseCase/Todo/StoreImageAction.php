@@ -35,8 +35,7 @@ class StoreImageAction
 
         $image = Image::create($imageData);
 
-        // Todoモデルの更新
-        $todo->update(['image_id' => $image->id]);
+        //$todo->update(['image_id' => $image->id]);
 
         return $todo;
     });

@@ -23,8 +23,6 @@ export const TodoDetail = () => {
 
   const todoId  = location.state.todoId
 
-  //console.log(`todoId = ${todoId}`);
-
   const [name, setName] = useState('');
   const handleNameCreation = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
@@ -186,6 +184,29 @@ export const TodoDetail = () => {
     }
   }
 
+  const storePDFForTodoMutation = useMutation({
+    mutationFn: (todoId:number) => {
+
+      return axios
+        .post(`http://localhost/api/todos/${todoId}/pdf`, )
+        .then((response) => {
+          console.log(response)
+        })
+        .catch((error) => {console.log(error); console.log(error.response.data); alert(error.response.data.message)});
+        },
+  });
+
+  const handlePDFForTodoStorage = async (todoId:number) => {
+    try {
+      await storePDFForTodoMutation.mutateAsync(todoId);
+      
+      await queryClient.invalidateQueries({queryKey: ['todo']})
+
+    } catch (error) {
+      console.error('pdfの作成に失敗しました:', error);
+    }
+  }
+
   const updateImageForTodoMutation = useMutation({
     mutationFn: ({ todoId, imageId }: { todoId: number, imageId: number }) => {
       
@@ -256,9 +277,9 @@ export const TodoDetail = () => {
   }
 
   const deleteImageForTodoMutation = useMutation({
-    mutationFn: (id:number) => {
+    mutationFn: ({ todoId, imageId }: { todoId: number, imageId: number }) => {
       return axios
-        .delete(`http://localhost/api/images/${id}`)
+        .delete(`http://localhost/api/todos/${todoId}/${imageId}`)
         .then((response) => {
           console.log(response)
         })
@@ -266,13 +287,12 @@ export const TodoDetail = () => {
     },
   });
 
-  const handleImageForTodoDeletion = async (id:number) => {
+  const handleImageForTodoDeletion = async (todoId:number,imageId:number) => {
     try {
 
-      await deleteImageForTodoMutation.mutateAsync(id);
+      await deleteImageForTodoMutation.mutateAsync({todoId,imageId});
       
       await queryClient.invalidateQueries({queryKey: ['todo']})
-      //await queryClient.invalidateQueries({queryKey: ['images']})
 
     } catch (error) {
       console.error('画像テーブルデータ削除に失敗しました:', error);
@@ -328,6 +348,11 @@ export const TodoDetail = () => {
         <button onClick={() => handleTodoUpdate(todo.id)}>更新</button>
       </div>
       <br/>
+      <br/>
+      <div>
+        <button onClick={() => handlePDFForTodoStorage(todo.id)}>PDF作成</button>
+      </div>
+      <br/>
       <form >
         <label htmlFor="image">画像</label>
         <input onChange={handleImageCreation} type="file" id="image" name="image" required accept="image/png, image/jpeg, image/jpg" />
@@ -349,7 +374,7 @@ export const TodoDetail = () => {
           setUpdatedTitle = { setUpdatedTitle } setUpdatedFilename = { setUpdatedFilename } />
           <button onClick={() => handleImageForTodoUpdate(todo.id,imageInfo.id)} type="button">更新する</button>
           <br/>
-          <button onClick={() => {handleImageForTodoDeletion(imageInfo.id); console.log(imageInfo.id)}} type="button">削除する</button>
+          <button onClick={() => {handleImageForTodoDeletion(todo.id,imageInfo.id); console.log(imageInfo.id)}} type="button">削除する</button>
         </div>
       ))}
     </div>
