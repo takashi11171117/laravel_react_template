@@ -185,10 +185,11 @@ export const TodoDetail = () => {
   }
 
   const storePDFForTodoMutation = useMutation({
-    mutationFn: (todoId:number) => {
+    mutationFn: (todo:Todo) => {
+      const pdfFilename = `${todo.content}.pdf`;
 
       return axios
-        .post(`http://localhost/api/todos/${todoId}/pdf`, )
+        .post(`http://localhost/api/todos/${todo.id}/pdf`, { filename: pdfFilename })
         .then((response) => {
           console.log(response)
         })
@@ -196,9 +197,9 @@ export const TodoDetail = () => {
         },
   });
 
-  const handlePDFForTodoStorage = async (todoId:number) => {
+  const handlePDFForTodoStorage = async (todo:Todo) => {
     try {
-      await storePDFForTodoMutation.mutateAsync(todoId);
+      await storePDFForTodoMutation.mutateAsync(todo);
       
       await queryClient.invalidateQueries({queryKey: ['todo']})
 
@@ -350,7 +351,7 @@ export const TodoDetail = () => {
       <br/>
       <br/>
       <div>
-        <button onClick={() => handlePDFForTodoStorage(todo.id)}>PDF作成</button>
+        <button onClick={() => handlePDFForTodoStorage(todo)}>PDF作成</button>
       </div>
       <br/>
       <form >

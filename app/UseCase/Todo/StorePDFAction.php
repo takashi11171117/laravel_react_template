@@ -16,18 +16,17 @@ class StorePDFAction
     {
         return DB::transaction(function () use ($todo, $request) {
         
-            if($todo->content !== null){
+            if($request->filename !== null){
 
                 $content = $todo->content;
-
-                
 
                 $pdf = new TCPDF();
                 $pdf->AddPage();
                 $pdf->writeHTML($content);
 
                 try {
-                    $tempPdfFile = storage_path('app/public/pdfs/' . $todo->content . '.pdf');
+                    //$tempPdfFile = storage_path('app/public/pdfs/' . $todo->content . '.pdf');
+                    $tempPdfFile = storage_path('app/public/pdfs/'.$request->filename);
                     $pdf->Output($tempPdfFile, 'F');
 
                     $pdfFpdi = new Fpdi();
@@ -55,8 +54,6 @@ class StorePDFAction
         
                 $pdf = Pdf::create($PDFData);
         
-                // Todoモデルの更新
-                //$todo->update(['pdf_id' => $pdf->id]);
             }
 
             return $todo;

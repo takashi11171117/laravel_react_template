@@ -21,14 +21,6 @@ class DestroyImageAction
 
                 return $todo;
             }
-
-            /*
-            Storage::disk('public')->delete('images/' . $image->filename);
-
-            $image->delete();
-
-            return $todo;
-            */
         });
     }
 }

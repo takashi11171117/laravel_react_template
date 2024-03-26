@@ -35,8 +35,6 @@ class StoreImageAction
 
         $image = Image::create($imageData);
 
-        //$todo->update(['image_id' => $image->id]);
-
         return $todo;
     });
 }

@@ -9,7 +9,6 @@ use App\Http\Resources\PDF\PDFCollection;
 use Illuminate\Http\Request;
 use App\Http\Requests\PDFRequest;
 use App\UseCase\PDF\IndexAction;
-use App\UseCase\PDF\StoreAction;
 use App\UseCase\PDF\DestroyAction;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -22,14 +21,6 @@ class PdfController extends Controller
 
         return new PDFCollection($IndexedPdfs);
     
-    }
-
-    public function store(PDFRequest $request, StoreAction $action)
-    {
-
-        $storedImage = $action->handle($request);
-
-        return new PDFResource($storedImage);
     }
 
     public function destroy(Pdf $pdf, DestroyAction $action)
