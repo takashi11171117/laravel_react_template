@@ -1,0 +1,10 @@
+import React from 'react'
+import { AppProvider } from '../resources/ts/providers/app'
+
+export const decorators = [
+  Story => (
+    <AppProvider>
+      <Story />
+    </AppProvider>
+  ),
+]

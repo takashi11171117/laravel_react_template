@@ -1,4 +1,5 @@
 import { Suspense } from 'react'
+import tw, { css } from 'twin.macro'
 import { Navigate, Outlet } from 'react-router-dom'
 
 import { Spinner } from '@/components/Elements'
@@ -14,7 +15,7 @@ const App = () => {
     <MainLayout>
       <Suspense
         fallback={
-          <div className="h-full w-full flex items-center justify-center">
+          <div css={suspense}>
             <Spinner size="xl" />
           </div>
         }>
@@ -23,6 +24,10 @@ const App = () => {
     </MainLayout>
   )
 }
+
+const suspense = css`
+  ${tw`h-full w-full flex items-center justify-center`}
+`
 
 export const protectedRoutes = [
   {

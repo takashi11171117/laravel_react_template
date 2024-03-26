@@ -7,7 +7,7 @@
         <title>sample-api</title>
 
         @viteReactRefresh
-        @vite(['resources/sass/app.scss', 'resources/ts/index.tsx'])
+        @vite(['resources/ts/index.tsx'])
 
     </head>
 

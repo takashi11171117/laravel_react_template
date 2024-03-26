@@ -5,6 +5,7 @@
   "prettier.singleQuote": true,
   "editor.tabSize": 2,
   "cSpell.words": [
+    "autodocs",
     "Barryvdh",
     "clsx",
     "delaycompress",
@@ -30,7 +31,10 @@
     "Queueable",
     "roboto",
     "sharedscripts",
-    "tailwindcss"
+    "svgr",
+    "tailwindcss",
+    "testid",
+    "windicss"
   ],
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -43,6 +47,9 @@
   },
   "[php]": {
     "editor.tabSize": 4
+  },
+  "files.associations": {
+    "*.css": "tailwindcss"
   },
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "typescript.tsdk": "node_modules/typescript/lib"

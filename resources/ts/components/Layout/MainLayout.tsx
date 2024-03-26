@@ -1,6 +1,5 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { HomeIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import clsx from 'clsx'
 import tw, { css } from 'twin.macro'
 import { cx, css as emotionCss } from '@emotion/css'
 import * as React from 'react'
@@ -26,23 +25,25 @@ const SideNavigation = () => {
           end={index === 0}
           key={item.name}
           to={item.to}
-          className={clsx(
-            'text-gray-300 hover:bg-gray-700 hover:text-white',
-            'group flex items-center px-2 py-2 text-base font-medium rounded-md',
-          )}>
-          <item.icon
-            className={clsx(
-              'text-gray-400 group-hover:text-gray-300',
-              'mr-4 flex-shrink-0 h-6 w-6',
-            )}
-            aria-hidden="true"
-          />
+          css={sideNavigationNavLink}
+          className="group">
+          <item.icon css={sideNavigationNavLinkItem} aria-hidden="true" />
           {item.name}
         </NavLink>
       ))}
     </>
   )
 }
+
+const sideNavigationNavLink = css`
+  ${tw`text-gray-300 hover:bg-gray-700 hover:text-white`}
+  ${tw`flex items-center px-2 py-2 text-base font-medium rounded-md`}
+`
+
+const sideNavigationNavLinkItem = css`
+  ${tw`text-gray-400 group-hover:text-gray-300`}
+  ${tw`mr-4 shrink-0 h-6 w-6`}
+`
 
 type MobileSidebarProps = {
   sidebarOpen: boolean
