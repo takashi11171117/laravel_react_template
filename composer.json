@@ -9,11 +9,14 @@
   "license": "MIT",
   "require": {
     "php": "^8.2",
+    "intervention/image": "^3.4",
     "laravel/fortify": "^1.20",
     "laravel/framework": "^11.0",
     "laravel/sanctum": "^4.0@dev",
     "laravel/tinker": "^2.9",
-    "league/csv": "^9.15"
+    "league/csv": "^9.15",
+    "setasign/fpdi": "^2.6",
+    "tecnickcom/tcpdf": "^6.7"
   },
   "require-dev": {
     "barryvdh/laravel-ide-helper": "^3.0@dev",
