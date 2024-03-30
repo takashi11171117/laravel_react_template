@@ -8,9 +8,7 @@
 
         @viteReactRefresh
         @vite(['resources/ts/index.tsx'])
-
     </head>
-
     <body class="antialiased">
         <div id="app"></div>
     </body>

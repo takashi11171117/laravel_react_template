@@ -16,6 +16,8 @@ const SideNavigation = () => {
     { name: 'Dashboard', to: '/app', icon: HomeIcon },
     { name: 'Page1', to: '/app/page1', icon: HomeIcon },
     { name: 'Page2', to: '/app/page2', icon: HomeIcon },
+    { name: 'User', to: '/app/users', icon: HomeIcon },
+    { name: 'Todo', to: '/app/todos', icon: HomeIcon },
   ] as SideNavigationItem[]
 
   return (

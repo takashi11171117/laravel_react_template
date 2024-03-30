@@ -4,11 +4,13 @@ import { Navigate, Outlet } from 'react-router-dom'
 
 import { Spinner } from '@/components/Elements'
 import { MainLayout } from '@/components/Layout'
-import { lazyImport } from '@/utils/lazyImport'
 
-const { Dashboard } = lazyImport(() => import('@/features/misc'), 'Dashboard')
-const { Page1 } = lazyImport(() => import('@/features/sample'), 'Page1')
-const { Page2 } = lazyImport(() => import('@/features/sample'), 'Page2')
+import { Dashboard } from '@/features/misc'
+import { Page1 } from '@/features/sample'
+import { Page2 } from '@/features/sample'
+import { TodoDetail } from '@/features/sample'
+import { TodoList } from '@/features/sample'
+import { UserPagination } from '@/features/sample'
 
 const App = () => {
   return (
@@ -36,6 +38,9 @@ export const protectedRoutes = [
     children: [
       { path: 'page1', element: <Page1 /> },
       { path: 'page2', element: <Page2 /> },
+      { path: 'todos', element: <TodoList /> },
+      { path: 'todos/:id', element: <TodoDetail /> },
+      { path: 'users', element: <UserPagination /> },
       { path: '', element: <Dashboard /> },
       { path: '*', element: <Navigate to="." /> },
     ],

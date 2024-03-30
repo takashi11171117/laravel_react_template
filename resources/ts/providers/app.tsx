@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { BrowserRouter as Router } from 'react-router-dom'
-import { Sanctum } from 'react-sanctum'
 
 import { Button, Spinner } from '@/components/Elements'
 
@@ -24,14 +23,6 @@ type AppProviderProps = {
   children: React.ReactNode
 }
 
-const sanctumConfig = {
-  apiUrl: 'http://localhost:8001',
-  csrfCookieRoute: 'sanctum/csrf-cookie',
-  signInRoute: 'api/login',
-  signOutRoute: 'api/logout',
-  userObjectRoute: 'api/user',
-}
-
 export const AppProvider = ({ children }: AppProviderProps) => {
   return (
     <React.Suspense
@@ -41,9 +32,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         </div>
       }>
       <ErrorBoundary FallbackComponent={ErrorFallback}>
-        <Sanctum config={sanctumConfig}>
-          <Router>{children}</Router>
-        </Sanctum>
+        <Router>{children}</Router>
       </ErrorBoundary>
     </React.Suspense>
   )

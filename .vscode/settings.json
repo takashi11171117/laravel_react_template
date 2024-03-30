@@ -33,7 +33,9 @@
     "sharedscripts",
     "svgr",
     "tailwindcss",
+    "tanstack",
     "testid",
+    "todos",
     "windicss"
   ],
   "[javascript]": {
