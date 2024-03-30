@@ -1,0 +1,9 @@
+server {
+    listen 80 default_server;
+
+    location / {
+        proxy_pass	http://laravel_react_template-laravel.test-1;
+        proxy_intercept_errors on;
+        error_page 404 /;
+    }
+}

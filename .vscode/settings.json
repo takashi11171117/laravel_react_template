@@ -5,20 +5,38 @@
   "prettier.singleQuote": true,
   "editor.tabSize": 2,
   "cSpell.words": [
+    "autodocs",
     "Barryvdh",
+    "clsx",
+    "delaycompress",
     "docblocks",
+    "endscript",
+    "fontsource",
+    "headlessui",
+    "heroicons",
     "Heuvel",
     "hoge",
     "larastan",
     "laravel",
+    "missingok",
+    "nodateext",
+    "notifempty",
     "nowrite",
     "nunomaduro",
     "Parens",
     "phpcs",
     "phpstorm",
+    "postrotate",
     "prittier",
     "Queueable",
-    "tailwindcss"
+    "roboto",
+    "sharedscripts",
+    "svgr",
+    "tailwindcss",
+    "tanstack",
+    "testid",
+    "todos",
+    "windicss"
   ],
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -32,4 +50,9 @@
   "[php]": {
     "editor.tabSize": 4
   },
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

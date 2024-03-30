@@ -1,32 +1,25 @@
-import React, { useEffect } from 'react'
-import tw, { css } from 'twin.macro'
-import AppRouter from '@/AppRouter'
-import { LinkNavigation } from '@/LinkNavigation'
-import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
+import { AppProvider } from '@/providers/app'
+import { AppRoutes } from '@/routes'
+import { GlobalStyles } from 'twin.macro'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnMount: true, 
+      refetchOnMount: true,
     },
   },
-});
+})
 
-const App: React.FC = () => {
-  useEffect(() => {}, [])
+function App() {
   return (
-    <div css={style}>
-      <QueryClientProvider client={queryClient}>
-        <LinkNavigation />
-        <AppRouter />
-      </QueryClientProvider>
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <AppProvider>
+        <GlobalStyles />
+        <AppRoutes />
+      </AppProvider>
+    </QueryClientProvider>
   )
 }
 
 export default App
-
-const style = css`
-  ${tw`mt-5`}
-  color: black;
-`
