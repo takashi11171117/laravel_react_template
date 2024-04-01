@@ -1,27 +1,21 @@
 import { useState, useEffect } from 'react'
 import { useLocation } from "react-router-dom";
 import { useQuery, useMutation,useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
 import { TodoInputForUpdate } from '@/pages/TodoInputForUpdate';
-
-type Todo = {
-  id: number
-  name: string
-  content: string
-}
-
-type Image = {
-  id: number
-  title: string
-  rawFilename: string
-  processedFilename: string
-}
+import { useFetchTodo } from '@/pages/useFetchTodo';
+import { useUpdateTodo } from '@/pages/useUpdateTodo';
+import { useStoreImageForTodo } from '@/pages/useStoreImageForTodo';
+import { useUpdateImageForTodo } from '@/pages/useUpdateImageForTodo';
+import { useDeleteImageForTodo }  from '@/pages/useDeleteImageForTodo';
+import { useStorePDFForTodo } from '@/pages/useStorePDFForTodoMutation';
+import { todosKeys } from '@/api/todos/todosKeys';
 
 export const TodoDetail = () => {
 
   const location = useLocation();
 
-  const todoId  = location.state.todoId
+  const todoId  = location.state.todoId as number;
+
 
   const [name, setName] = useState('');
   const handleNameCreation = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,38 +64,17 @@ export const TodoDetail = () => {
 
   const queryClient = useQueryClient();
 
-  const fetchTodo = async (id:number) => {
-    try {
-      const response = await axios.get(`http://localhost/api/todos/${id}`);
-      return response.data.data;
-    } catch (error) {
-      console.error('データを取得できませんでした:', error);
-      throw new Error('データの取得に失敗しました');
-    }
-  }
+  const {todo, isLoading, isError} = useFetchTodo(todoId);
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['todo'],
-    queryFn: () => fetchTodo(todoId)
-  })
+  const { updateTodoMutateAsync } = useUpdateTodo();
 
-  const updateTodoMutation = useMutation({
-    mutationFn: (id:number) => {
-      return axios
-        .put(`http://localhost/api/todos/${id}`, {
-          name: name,
-          content: content,
-        })
-        .then((response) => {
-          console.log(response)
-        })
-        .then(() => {
-          setName('');
-          setContent('');
-        })
-        .catch((error) => {console.log(error); alert(error.name.required)});
-    },
-  });
+  const { storeImageForTodoMutateAsync } = useStoreImageForTodo();
+
+  const { updateImageForTodoMutateAsync } = useUpdateImageForTodo();
+
+  const { deleteImageForTodoMutateAsync } = useDeleteImageForTodo();
+
+  const { storePDFForTodoMutateAsync } = useStorePDFForTodo();
 
   const handleTodoUpdate = async (id:number) => {
     try {
@@ -118,41 +91,14 @@ export const TodoDetail = () => {
         alert("内容は必ず50文字以下にして下さい");
         return;
       }
-      await updateTodoMutation.mutateAsync(todoId);
-      
-      await queryClient.invalidateQueries({queryKey: ['todo']})
+      await updateTodoMutateAsync({name,content,todoId});
+
+      await queryClient.invalidateQueries({queryKey: todosKeys.each});
 
     } catch (error) {
       console.error('Todoの更新に失敗しました:', error);
     }
   }
-
-  const storeImageForTodoMutation = useMutation({
-    mutationFn: (id:number) => {
-    
-      const formData = new FormData();
-      if(image !== null){ 
-        formData.append('image',image); 
-        formData.append('title', title);
-        formData.append('filename', filename);
-      }
-
-      return axios
-        .post(`http://localhost/api/todos/${id}`, formData,{
-          headers: {
-            'Content-Type': 'multipart/form-data', 
-          },
-        })
-        .then((response) => {
-          console.log(response)
-        })
-        .then(() => {
-          setTitle('');
-          setFileName('');
-        })
-        .catch((error) => {console.log(error); console.log(error.response.data); alert(error.response.data.message)});
-        },
-  });
 
   const handleImageForTodoStorage = async (id:number) => {
     try {
@@ -172,34 +118,26 @@ export const TodoDetail = () => {
         return;
       }
       
-
-      await storeImageForTodoMutation.mutateAsync(todoId);
+      await storeImageForTodoMutateAsync({title,filename,image,todoId});
       
-      await queryClient.invalidateQueries({queryKey: ['todo']})
+      await queryClient.invalidateQueries({queryKey: todosKeys.each})
 
       setImage(null);
+      setTitle('');
+      setFileName('');
 
     } catch (error) {
       console.error('Todoの画像保存に失敗しました:', error);
     }
   }
 
-  const storePDFForTodoMutation = useMutation({
-    mutationFn: (todo:Todo) => {
-      const pdfFilename = `${todo.content}.pdf`;
-
-      return axios
-        .post(`http://localhost/api/todos/${todo.id}/pdf`, { filename: pdfFilename })
-        .then((response) => {
-          console.log(response)
-        })
-        .catch((error) => {console.log(error); console.log(error.response.data); alert(error.response.data.message)});
-        },
-  });
-
   const handlePDFForTodoStorage = async (todo:Todo) => {
     try {
-      await storePDFForTodoMutation.mutateAsync(todo);
+
+      const todoContent = todo.content;
+      const todoId = todo.id;
+
+      await storePDFForTodoMutateAsync({todoContent,todoId});
       
       await queryClient.invalidateQueries({queryKey: ['todo']})
 
@@ -207,45 +145,6 @@ export const TodoDetail = () => {
       console.error('pdfの作成に失敗しました:', error);
     }
   }
-
-  const updateImageForTodoMutation = useMutation({
-    mutationFn: ({ todoId, imageId }: { todoId: number, imageId: number }) => {
-      
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data', 
-        },
-      };
-    
-      const formData = new FormData();
-      
-      if(image !== null){ 
-        console.log(`updatedTitle: ${updatedTitle}`);
-        console.log(`updatedFilename: ${updatedFilename}`)
-        formData.append('image',image); 
-        formData.append('title', updatedTitle);
-        formData.append('filename', updatedFilename);
-
-        return axios
-        .post(`http://localhost/api/todos/${todoId}/${imageId}`, formData, config)
-        .then((response) => {
-          console.log(response)
-        })
-        .catch((error) => {console.log(error); alert(error.name.required)});
-      }
-      else{
-        return axios
-        .post(`http://localhost/api/todos/${todoId}/${imageId}`, {
-          title: updatedTitle,
-          filename: updatedFilename,
-        } )
-        .then((response) => {
-          console.log(response)
-        })
-        .catch((error) => {console.log(error); alert(error.name.required)});
-      }
-    },
-  });
 
   const handleImageForTodoUpdate = async (todoId:number,imageId:number) => {
     try {
@@ -266,9 +165,9 @@ export const TodoDetail = () => {
         return;
       }
 
-      await updateImageForTodoMutation.mutateAsync({todoId,imageId});
+      await updateImageForTodoMutateAsync({updatedTitle, updatedFilename, image, todoId,imageId});
       
-      await queryClient.invalidateQueries({queryKey: ['todo']})
+      await queryClient.invalidateQueries({queryKey: todosKeys.each})
 
       setImage(null);
 
@@ -277,23 +176,12 @@ export const TodoDetail = () => {
     }
   }
 
-  const deleteImageForTodoMutation = useMutation({
-    mutationFn: ({ todoId, imageId }: { todoId: number, imageId: number }) => {
-      return axios
-        .delete(`http://localhost/api/todos/${todoId}/${imageId}`)
-        .then((response) => {
-          console.log(response)
-        })
-        .catch((error) => {console.log(error); alert(error.name.required)});
-    },
-  });
-
   const handleImageForTodoDeletion = async (todoId:number,imageId:number) => {
     try {
 
-      await deleteImageForTodoMutation.mutateAsync({todoId,imageId});
+      await deleteImageForTodoMutateAsync({todoId,imageId});
       
-      await queryClient.invalidateQueries({queryKey: ['todo']})
+      await queryClient.invalidateQueries({queryKey: todosKeys.each})
 
     } catch (error) {
       console.error('画像テーブルデータ削除に失敗しました:', error);
@@ -302,8 +190,9 @@ export const TodoDetail = () => {
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error fetching data</div>;
+  if(todo === undefined) return <div>data is undefined</div>
 
-  const todo = data;
+  //const todo = data;
   //console.log(data);
 
   const filenames = todo.image_filenames;
