@@ -122,7 +122,7 @@ export const TodoList = () => {
         <div key={todo.id}>
           <div>
             <p>{todo.id}</p>
-            <Link to={`/todos/${todo.id}`} state={{ todoId: todo.id }}>
+            <Link to={`/app/todos/${todo.id}`} state={{ todoId: todo.id }}>
               {todo.name}
             </Link>
             <p>{todo.content}</p>
