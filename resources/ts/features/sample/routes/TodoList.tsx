@@ -68,7 +68,7 @@ export const TodoList = () => {
   if (isError) return <div>Error fetching data</div>
   if (data === undefined) return <div>data is undefined</div>
 
-  console.log(data)
+  console.log(data.meta)
 
   return (
     <div>

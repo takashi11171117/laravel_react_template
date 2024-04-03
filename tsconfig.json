@@ -14,7 +14,11 @@
     },
     "types": ["@emotion/react/types/css-prop"]
   },
-  "files": ["./resources/ts/types/twin.d.ts"],
+  "files": [
+    "./resources/ts/types/twin.d.ts",
+    "./resources/ts/types/vite-env.d.ts",
+    "./resources/ts/types/axios.d.ts"
+  ],
   "include": ["resources/ts/**/*"],
   "exclude": ["node_modules", "public"]
 }
