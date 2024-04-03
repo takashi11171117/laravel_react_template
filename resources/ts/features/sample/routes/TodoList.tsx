@@ -1,13 +1,10 @@
 import { useState } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { axios } from '@/lib/axios'
+import { useQueryClient } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
-
-type Todo = {
-  id: number
-  name: string
-  content: string
-}
+import { useFetchTodos } from '@/features/sample/hooks/viewModel/todos/useFetchTodos'
+import { useCreateTodo } from '@/features/sample/hooks/viewModel/todos/useCreateTodo'
+import { useDeleteTodo } from '@/features/sample/hooks/viewModel/todos/useDeleteTodo'
+import { todosKeys } from '@/features/sample/hooks/api/todos/todosKeys'
 
 export const TodoList = () => {
   const [name, setName] = useState('')
@@ -22,40 +19,13 @@ export const TodoList = () => {
 
   const queryClient = useQueryClient()
 
-  const fetchTodos = async () => {
-    try {
-      const response = await axios.get('/todos')
-      return response
-    } catch (error) {
-      console.error('データを取得できませんでした:', error)
-      throw new Error('データの取得に失敗しました')
-    }
-  }
+  const { data, isLoading, isError } = useFetchTodos()
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['todos'],
-    queryFn: fetchTodos,
-  })
+  const { createMutateAsync } = useCreateTodo()
+  const createTodoMutateAsync = createMutateAsync
 
-  const createTodoMutation = useMutation({
-    mutationFn: () => {
-      return axios
-        .post('/todos', {
-          name: name,
-          content: content,
-        })
-        .then((response: any) => {
-          console.log(response)
-        })
-        .then(() => {
-          setName('')
-          setContent('')
-        })
-        .catch((error: any) => {
-          console.log(error)
-        })
-    },
-  })
+  const { deleteMutateAsync } = useDeleteTodo()
+  const deleteTodoMutateAsync = deleteMutateAsync
 
   const handleTodoCreation = async () => {
     try {
@@ -72,30 +42,23 @@ export const TodoList = () => {
         alert('内容は必ず50文字以下にして下さい')
         return
       }
-      await createTodoMutation.mutateAsync()
 
-      await queryClient.invalidateQueries({ queryKey: ['todos'] })
+      await createTodoMutateAsync({ name, content })
+
+      setName('')
+      setContent('')
+
+      await queryClient.invalidateQueries({ queryKey: todosKeys.all })
     } catch (error) {
       console.error('Todoの作成に失敗しました:', error)
     }
   }
 
-  const deleteTodoMutation = useMutation({
-    mutationFn: (id: number) => {
-      return axios
-        .delete(`/todos/${id}`)
-        .then((response: any) => {
-          console.log(response)
-        })
-        .catch((error: any) => console.log(error))
-    },
-  })
-
   const handleTodoDeletion = async (id: number) => {
     try {
-      await deleteTodoMutation.mutateAsync(id)
+      await deleteTodoMutateAsync({ id })
 
-      await queryClient.invalidateQueries({ queryKey: ['todos'] })
+      await queryClient.invalidateQueries({ queryKey: todosKeys.all })
     } catch (error) {
       console.error('Todoの削除に失敗しました:', error)
     }
@@ -103,8 +66,9 @@ export const TodoList = () => {
 
   if (isLoading) return <div>Loading...</div>
   if (isError) return <div>Error fetching data</div>
-
   if (data === undefined) return <div>data is undefined</div>
+
+  console.log(data)
 
   return (
     <div>
@@ -118,7 +82,7 @@ export const TodoList = () => {
         内容:
         <input value={content} onChange={handleContentCreation} />
       </label>
-      {data.data.todos.map((todo: Todo) => (
+      {data.data.items.map((todo: Todo) => (
         <div key={todo.id}>
           <div>
             <p>{todo.id}</p>

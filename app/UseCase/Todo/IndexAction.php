@@ -3,13 +3,13 @@
 namespace App\UseCase\Todo;
 
 use App\Models\Todo;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class IndexAction
 {
-    public function handle(): Collection
+    public function handle(?int $perPage): LengthAwarePaginator
     {
-        $todos =  Todo::all();
+        $todos = Todo::paginate($perPage ?? config('constants.PER_PAGE'));
 
         return $todos;
     }

@@ -17,14 +17,15 @@ use App\UseCase\Todo\UpdateAction;
 use App\UseCase\Todo\UpdateImageAction;
 use App\UseCase\Todo\DestroyAction;
 use App\UseCase\Todo\DestroyImageAction;
+use App\Http\Requests\Common\PaginateRequest;
 use Symfony\Component\HttpFoundation\Response;
 
 class TodoController extends Controller
 {
 
-    public function index(IndexAction $action)
+    public function index(PaginateRequest $request, IndexAction $action)
     {
-        $todos = $action->handle();
+        $todos = $action->handle($request->per_page);
 
         return new TodoCollection($todos);
     }
