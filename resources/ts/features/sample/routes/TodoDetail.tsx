@@ -1,27 +1,19 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { axios } from '@/lib/axios'
+import { useQueryClient } from '@tanstack/react-query'
 import { TodoInputForUpdate } from '@/features/sample/components/TodoInputForUpdate'
-
-type Todo = {
-  id: number
-  name: string
-  content: string
-}
-
-type Image = {
-  id: number
-  title: string
-  rawFilename: string
-  processedFilename: string
-}
+import { useFetchTodo } from '@/features/sample/hooks/viewModel/todos/useFetchTodo'
+import { useUpdateTodo } from '@/features/sample/hooks/viewModel/todos/useUpdateTodo'
+import { useStoreImageForTodo } from '@/features/sample/hooks/viewModel/todos/useStoreImageForTodo'
+import { useUpdateImageForTodo } from '@/features/sample/hooks/viewModel/todos/useUpdateImageForTodo'
+import { useDeleteImageForTodo } from '@/features/sample/hooks/viewModel/todos/useDeleteImageForTodo'
+import { useStorePDFForTodo } from '@/features/sample/hooks/viewModel/todos/useStorePDFForTodoMutation'
+import { todosKeys } from '@/features/sample/hooks/api/todos/todosKeys'
 
 export const TodoDetail = () => {
-  console.log(process.env.API_URL)
   const location = useLocation()
 
-  const todoId = location.state.todoId
+  const todoId = location.state.todoId as number
 
   const [name, setName] = useState('')
   const handleNameCreation = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,41 +62,17 @@ export const TodoDetail = () => {
 
   const queryClient = useQueryClient()
 
-  const fetchTodo = async (id: number) => {
-    try {
-      const response = await axios.get(`/todos/${id}`)
-      return response.data.data
-    } catch (error) {
-      console.error('データを取得できませんでした:', error)
-      throw new Error('データの取得に失敗しました')
-    }
-  }
+  const { todo, isLoading, isError } = useFetchTodo(todoId)
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['todo'],
-    queryFn: () => fetchTodo(todoId),
-  })
+  const { updateTodoMutateAsync } = useUpdateTodo()
 
-  const updateTodoMutation = useMutation({
-    mutationFn: (id: number) => {
-      return axios
-        .put(`/todos/${id}`, {
-          name: name,
-          content: content,
-        })
-        .then((response: any) => {
-          console.log(response)
-        })
-        .then(() => {
-          setName('')
-          setContent('')
-        })
-        .catch((error: { name: { required: any } }) => {
-          console.log(error)
-          alert(error.name.required)
-        })
-    },
-  })
+  const { storeImageForTodoMutateAsync } = useStoreImageForTodo()
+
+  const { updateImageForTodoMutateAsync } = useUpdateImageForTodo()
+
+  const { deleteImageForTodoMutateAsync } = useDeleteImageForTodo()
+
+  const { storePDFForTodoMutateAsync } = useStorePDFForTodo()
 
   const handleTodoUpdate = async (id: number) => {
     try {
@@ -121,43 +89,14 @@ export const TodoDetail = () => {
         alert('内容は必ず50文字以下にして下さい')
         return
       }
-      await updateTodoMutation.mutateAsync(todoId)
 
-      await queryClient.invalidateQueries({ queryKey: ['todo'] })
+      await updateTodoMutateAsync({ name, content, todoId })
+
+      await queryClient.invalidateQueries({ queryKey: todosKeys.each })
     } catch (error) {
       console.error('Todoの更新に失敗しました:', error)
     }
   }
-
-  const storeImageForTodoMutation = useMutation({
-    mutationFn: (id: number) => {
-      const formData = new FormData()
-      if (image !== null) {
-        formData.append('image', image)
-        formData.append('title', title)
-        formData.append('filename', filename)
-      }
-
-      return axios
-        .post(`/todos/${id}`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        })
-        .then((response: any) => {
-          console.log(response)
-        })
-        .then(() => {
-          setTitle('')
-          setFileName('')
-        })
-        .catch((error: { response: { data: { message: any } } }) => {
-          console.log(error)
-          console.log(error.response.data)
-          alert(error.response.data.message)
-        })
-    },
-  })
 
   const handleImageForTodoStorage = async (id: number) => {
     try {
@@ -177,87 +116,30 @@ export const TodoDetail = () => {
         return
       }
 
-      await storeImageForTodoMutation.mutateAsync(todoId)
+      await storeImageForTodoMutateAsync({ title, filename, image, todoId })
 
-      await queryClient.invalidateQueries({ queryKey: ['todo'] })
+      await queryClient.invalidateQueries({ queryKey: todosKeys.each })
 
       setImage(null)
+      setTitle('')
+      setFileName('')
     } catch (error) {
       console.error('Todoの画像保存に失敗しました:', error)
     }
   }
 
-  const storePDFForTodoMutation = useMutation({
-    mutationFn: (todo: Todo) => {
-      const pdfFilename = `${todo.content}.pdf`
-
-      return axios
-        .post(`/todos/${todo.id}/pdf`, {
-          filename: pdfFilename,
-        })
-        .then((response: any) => {
-          console.log(response)
-        })
-        .catch((error: { response: { data: { message: any } } }) => {
-          console.log(error)
-          console.log(error.response.data)
-          alert(error.response.data.message)
-        })
-    },
-  })
-
   const handlePDFForTodoStorage = async (todo: Todo) => {
     try {
-      await storePDFForTodoMutation.mutateAsync(todo)
+      const todoContent = todo.content
+      const todoId = todo.id
 
-      await queryClient.invalidateQueries({ queryKey: ['todo'] })
+      await storePDFForTodoMutateAsync({ todoContent, todoId })
+
+      await queryClient.invalidateQueries({ queryKey: todosKeys.each })
     } catch (error) {
       console.error('pdfの作成に失敗しました:', error)
     }
   }
-
-  const updateImageForTodoMutation = useMutation({
-    mutationFn: ({ todoId, imageId }: { todoId: number; imageId: number }) => {
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }
-
-      const formData = new FormData()
-
-      if (image !== null) {
-        console.log(`updatedTitle: ${updatedTitle}`)
-        console.log(`updatedFilename: ${updatedFilename}`)
-        formData.append('image', image)
-        formData.append('title', updatedTitle)
-        formData.append('filename', updatedFilename)
-
-        return axios
-          .post(`/todos/${todoId}/${imageId}`, formData, config)
-          .then((response: any) => {
-            console.log(response)
-          })
-          .catch((error: { name: { required: any } }) => {
-            console.log(error)
-            alert(error.name.required)
-          })
-      } else {
-        return axios
-          .post(`/api/todos/${todoId}/${imageId}`, {
-            title: updatedTitle,
-            filename: updatedFilename,
-          })
-          .then((response: any) => {
-            console.log(response)
-          })
-          .catch((error: { name: { required: any } }) => {
-            console.log(error)
-            alert(error.name.required)
-          })
-      }
-    },
-  })
 
   const handleImageForTodoUpdate = async (todoId: number, imageId: number) => {
     try {
@@ -276,10 +158,15 @@ export const TodoDetail = () => {
         alert('imageFileNameは必ず50文字以下にして下さい')
         return
       }
+      await updateImageForTodoMutateAsync({
+        updatedTitle,
+        updatedFilename,
+        image,
+        todoId,
+        imageId,
+      })
 
-      await updateImageForTodoMutation.mutateAsync({ todoId, imageId })
-
-      await queryClient.invalidateQueries({ queryKey: ['todo'] })
+      await queryClient.invalidateQueries({ queryKey: todosKeys.each })
 
       setImage(null)
     } catch (error) {
@@ -287,28 +174,14 @@ export const TodoDetail = () => {
     }
   }
 
-  const deleteImageForTodoMutation = useMutation({
-    mutationFn: ({ todoId, imageId }: { todoId: number; imageId: number }) => {
-      return axios
-        .delete(`/todos/${todoId}/${imageId}`)
-        .then((response: any) => {
-          console.log(response)
-        })
-        .catch((error: { name: { required: any } }) => {
-          console.log(error)
-          alert(error.name.required)
-        })
-    },
-  })
-
   const handleImageForTodoDeletion = async (
     todoId: number,
     imageId: number,
   ) => {
     try {
-      await deleteImageForTodoMutation.mutateAsync({ todoId, imageId })
+      await deleteImageForTodoMutateAsync({ todoId, imageId })
 
-      await queryClient.invalidateQueries({ queryKey: ['todo'] })
+      await queryClient.invalidateQueries({ queryKey: todosKeys.each })
     } catch (error) {
       console.error('画像テーブルデータ削除に失敗しました:', error)
     }
@@ -316,25 +189,19 @@ export const TodoDetail = () => {
 
   if (isLoading) return <div>Loading...</div>
   if (isError) return <div>Error fetching data</div>
-
-  const todo = data
-  //console.log(data);
+  if (todo === undefined) return <div>data is undefined</div> //console.log(data);
 
   const filenames = todo.image_filenames
-  //console.log(filenames);
 
   const imageIds = todo.image_ids
-  //console.log(imageIds);
 
   const imageTitles = todo.image_titles
-  //console.log(imageTitles);
 
   const processedFilenames = filenames.map(
     (filename: string, index: number) => {
       return `/storage/images/${filename}`
     },
   )
-  //console.log(processedFilenames);
 
   const imageInfos: Image[] = imageIds.map((id: number, index: number) => {
     return {
@@ -344,12 +211,7 @@ export const TodoDetail = () => {
       processedFilename: processedFilenames[index],
     }
   })
-  //console.log(imageInfos);
 
-  /*
-  更新の場合は、
-  画面の名前、内容の入力欄に書き込んで更新したいtodoの下にある更新ボタンを押します
-  */
   return (
     <div>
       <h1>TodoDetail is here.</h1>

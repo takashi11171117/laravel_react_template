@@ -10,7 +10,7 @@ class TodoCollection extends ResourceCollection
     public function toArray(Request $request): array
     {
         return [
-            'todos' => $this->collection->map(function ($todo) {
+            'items' => $this->collection->map(function ($todo) {
                 return new TodoResource($todo);
             }),
         ];
