@@ -1,23 +1,36 @@
 import * as React from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
-import { BrowserRouter as Router } from 'react-router-dom'
-
+import { RouterProvider } from 'react-router-dom'
+import { QueryClientProvider } from '@tanstack/react-query'
+import { queryClient } from '@/lib/reactQuery'
 import { Button, Spinner } from '@/components/Elements'
+import tw, { css } from 'twin.macro'
+import { appRoutes } from '@/routes'
 
 const ErrorFallback = () => {
   return (
-    <div
-      className="text-red-500 w-screen h-screen flex flex-col justify-center items-center"
-      role="alert">
-      <h2 className="text-lg font-semibold">Ooops, something went wrong :( </h2>
+    <div css={errorFallback} role="alert">
+      <h2 css={errorFallbackText}>Ooops, something went wrong</h2>
       <Button
-        className="mt-4"
+        css={errorFallbackButton}
         onClick={() => window.location.assign(window.location.origin)}>
         Refresh
       </Button>
     </div>
   )
 }
+
+const errorFallback = css`
+  ${tw`text-red-500 w-screen h-screen flex flex-col justify-center items-center`}
+`
+
+const errorFallbackText = css`
+  ${tw`text-lg font-semibold`}
+`
+
+const errorFallbackButton = css`
+  ${tw`mt-4`}
+`
 
 type AppProviderProps = {
   children: React.ReactNode
@@ -27,13 +40,19 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   return (
     <React.Suspense
       fallback={
-        <div className="flex items-center justify-center w-screen h-screen">
+        <div css={spinner}>
           <Spinner size="xl" />
         </div>
       }>
       <ErrorBoundary FallbackComponent={ErrorFallback}>
-        <Router>{children}</Router>
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={appRoutes()} />
+        </QueryClientProvider>
       </ErrorBoundary>
     </React.Suspense>
   )
 }
+
+const spinner = css`
+  ${tw`flex items-center justify-center w-screen h-screen`}
+`

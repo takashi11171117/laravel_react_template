@@ -1,15 +1,18 @@
-import { useRoutes } from 'react-router-dom'
+import { createBrowserRouter, useRoutes } from 'react-router-dom'
 
 import { Landing } from '@/features/misc'
 
 import { protectedRoutes } from '@/routes/protected'
+import { publicRoutes } from './public'
 
-export const AppRoutes = () => {
+export const appRoutes = () => {
   const commonRoutes = [{ index: true, element: <Landing /> }]
 
-  const routes = protectedRoutes
+  const router = createBrowserRouter([
+    ...protectedRoutes,
+    ...publicRoutes,
+    ...commonRoutes,
+  ])
 
-  const element = useRoutes([...routes, ...commonRoutes])
-
-  return <>{element}</>
+  return router
 }
