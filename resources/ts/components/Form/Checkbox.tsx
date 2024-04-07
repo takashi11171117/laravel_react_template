@@ -10,8 +10,16 @@ export const Checkbox = (props: CheckboxProps) => {
   const { label, registration } = props
   return (
     <div css={checkbox}>
-      <input type="checkbox" value="" css={checkboxInput} {...registration} />
-      <label css={checkboxLabel}>{label}</label>
+      <input
+        id={label}
+        type="checkbox"
+        value=""
+        css={checkboxInput}
+        {...registration}
+      />
+      <label htmlFor={label} css={checkboxLabel}>
+        {label}
+      </label>
     </div>
   )
 }
