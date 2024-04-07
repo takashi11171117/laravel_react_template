@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import * as z from 'zod'
 
 import { Button } from '@/components/Elements'
@@ -58,6 +59,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
         onSubmit={async values => {
           try {
             await registerUserMutation.mutateAsync(values)
+            toast.success('新規登録が完了しました。')
             onSuccess()
           } catch (error: any) {
             setErrorMessage(error.response.data.message)

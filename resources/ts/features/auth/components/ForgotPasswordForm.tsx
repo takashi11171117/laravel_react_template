@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import * as z from 'zod'
 
 import { Button } from '@/components/Elements'
@@ -36,6 +37,7 @@ export const ForgotPasswordForm = ({ onSuccess }: ForgotPasswordFormProps) => {
         onSubmit={async values => {
           try {
             await forgotPasswordMutation.mutateAsync(values)
+            toast.success('メールを送信しました。')
             onSuccess()
           } catch (error: any) {
             setErrorMessage(error.response.data.message)

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import * as z from 'zod'
 import tw, { css } from 'twin.macro'
 
@@ -45,6 +46,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
           try {
             await loginMutation.mutateAsync(values)
             onSuccess()
+            toast.success('ログインが完了しました。')
           } catch (error: any) {
             setErrorMessage(error.response.data.message)
           }

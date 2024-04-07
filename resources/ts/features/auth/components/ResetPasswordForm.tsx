@@ -1,4 +1,5 @@
 import { Link, useParams, useSearchParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import * as z from 'zod'
 
 import { Button } from '@/components/Elements'
@@ -60,6 +61,7 @@ export const ResetPasswordForm = ({ onSuccess }: ResetPasswordFormProps) => {
         onSubmit={async values => {
           try {
             await resetPasswordMutation.mutateAsync(values)
+            toast.success('パスワード再設定が完了しました。')
             onSuccess()
           } catch (error: any) {
             setErrorMessage(error.response.data.message)

@@ -1,5 +1,7 @@
 import * as React from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import { RouterProvider } from 'react-router-dom'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClient } from '@/lib/reactQuery'
@@ -46,6 +48,17 @@ export const AppProvider = ({ children }: AppProviderProps) => {
       }>
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <QueryClientProvider client={queryClient}>
+          <ToastContainer
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            position={'bottom-right'}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
           <RouterProvider router={appRoutes()} />
         </QueryClientProvider>
       </ErrorBoundary>
