@@ -3,7 +3,7 @@ import * as z from 'zod'
 import tw, { css } from 'twin.macro'
 
 import { Button } from '@/components/Elements'
-import { Form, InputField } from '@/components/Form'
+import { Checkbox, Form, InputField } from '@/components/Form'
 import { useLoginMutation } from '@/features/auth/hooks/api/hooks'
 import { useState } from 'react'
 
@@ -20,11 +20,13 @@ const schema = z.object({
       /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()[\]\-=_+{};':"\\|,.<>?/~`])/,
       { message: '大文字小文字の半角英、数字、記号を使用してください' },
     ),
+  remember: z.boolean(),
 })
 
 type LoginValues = {
   email: string
   password: string
+  remember: boolean
 }
 
 type LoginFormProps = {
@@ -55,15 +57,19 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
             `}>
             <InputField
               type="email"
-              label="Email Address"
+              label="メールアドレス"
               error={formState.errors['email']}
               registration={register('email')}
             />
             <InputField
               type="password"
-              label="Password"
+              label="パスワード"
               error={formState.errors['password']}
               registration={register('password')}
+            />
+            <Checkbox
+              label="次回から自動ログインする"
+              registration={register('remember')}
             />
             <div>
               {loginMutation.isError ? (

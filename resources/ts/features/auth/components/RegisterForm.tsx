@@ -74,25 +74,25 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
             `}>
             <InputField
               type="text"
-              label="name"
+              label="ユーザー名"
               error={formState.errors['name']}
               registration={register('name')}
             />
             <InputField
               type="email"
-              label="Email Address"
+              label="メールアドレス"
               error={formState.errors['email']}
               registration={register('email')}
             />
             <InputField
               type="password"
-              label="Password"
+              label="パスワード"
               error={formState.errors['password']}
               registration={register('password')}
             />
             <InputField
               type="password"
-              label="Password Confirmation"
+              label="パスワード確認"
               error={formState.errors['password_confirmation']}
               registration={register('password_confirmation')}
             />
