@@ -22,10 +22,7 @@ export const TodoList = () => {
   const { data, isLoading, isError } = useFetchTodos()
 
   const { createMutateAsync } = useCreateTodo()
-  const createTodoMutateAsync = createMutateAsync
-
   const { deleteMutateAsync } = useDeleteTodo()
-  const deleteTodoMutateAsync = deleteMutateAsync
 
   const handleTodoCreation = async () => {
     try {
@@ -43,7 +40,7 @@ export const TodoList = () => {
         return
       }
 
-      await createTodoMutateAsync({ name, content })
+      await createMutateAsync({ name, content })
 
       setName('')
       setContent('')
@@ -56,7 +53,7 @@ export const TodoList = () => {
 
   const handleTodoDeletion = async (id: number) => {
     try {
-      await deleteTodoMutateAsync({ id })
+      await deleteMutateAsync({ id })
 
       await queryClient.invalidateQueries({ queryKey: todosKeys.all })
     } catch (error) {

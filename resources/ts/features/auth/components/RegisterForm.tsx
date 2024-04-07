@@ -1,142 +1,143 @@
-// import { Switch } from '@headlessui/react';
-// import * as React from 'react';
-// import { Link } from 'react-router-dom';
-// import * as z from 'zod';
+import { Link } from 'react-router-dom'
+import * as z from 'zod'
 
-// import { Button } from '@/components/Elements';
-// import { Form, InputField, SelectField } from '@/components/Form';
-// import { useTeams } from '@/features/teams';
-// import { useAuth } from '@/lib/auth';
+import { Button } from '@/components/Elements'
+import { Form, InputField } from '@/components/Form'
+import tw, { css } from 'twin.macro'
+import { useRegisterUserMutation } from '@/features/auth/hooks/api/hooks'
+import { useState } from 'react'
 
-// const schema = z
-//   .object({
-//     email: z.string().min(1, 'Required'),
-//     firstName: z.string().min(1, 'Required'),
-//     lastName: z.string().min(1, 'Required'),
-//     password: z.string().min(1, 'Required'),
-//   })
-//   .and(
-//     z
-//       .object({
-//         teamId: z.string().min(1, 'Required'),
-//       })
-//       .or(z.object({ teamName: z.string().min(1, 'Required') }))
-//   );
+const schema = z
+  .object({
+    email: z
+      .string()
+      .min(1, 'メールアドレスを入力してください')
+      .email({ message: 'メールの形式が違います' }),
+    name: z.string().min(1, '名前を入力してください'),
+    password: z
+      .string()
+      .min(10, '10文字以上で入力してください')
+      .max(64, '64文字以下で入力してください')
+      .regex(
+        /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()[\]\-=_+{};':"\\|,.<>?/~`])/,
+        { message: '大文字小文字の半角英、数字、記号を使用してください' },
+      ),
+    password_confirmation: z
+      .string()
+      .min(1, '確認用のパスワードを入力してください'),
+  })
+  .superRefine(({ password, password_confirmation }, ctx) => {
+    if (password !== password_confirmation) {
+      ctx.addIssue({
+        path: ['password_confirmation'],
+        code: 'custom',
+        message: 'パスワードが一致しません',
+      })
+    }
+  })
 
-// type RegisterValues = {
-//   firstName: string;
-//   lastName: string;
-//   email: string;
-//   password: string;
-//   teamId?: string;
-//   teamName?: string;
-// };
+type RegisterValues = {
+  name: string
+  email: string
+  password: string
+  password_confirmation: string
+}
 
-// type RegisterFormProps = {
-//   onSuccess: () => void;
-// };
+type RegisterFormProps = {
+  onSuccess: () => void
+}
 
-// export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
-//   const { register, isRegistering } = useAuth();
-//   const [chooseTeam, setChooseTeam] = React.useState(false);
+export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
+  const registerUserMutation = useRegisterUserMutation()
 
-//   const teamsQuery = useTeams({
-//     config: {
-//       enabled: chooseTeam,
-//     },
-//   });
+  const [errorMessage, setErrorMessage] = useState('')
 
-//   return (
-//     <div>
-//       <Form<RegisterValues, typeof schema>
-//         onSubmit={async (values) => {
-//           await register(values);
-//           onSuccess();
-//         }}
-//         schema={schema}
-//         options={{
-//           shouldUnregister: true,
-//         }}
-//       >
-//         {({ register, formState }) => (
-//           <>
-//             <InputField
-//               type="text"
-//               label="First Name"
-//               error={formState.errors['firstName']}
-//               registration={register('firstName')}
-//             />
-//             <InputField
-//               type="text"
-//               label="Last Name"
-//               error={formState.errors['lastName']}
-//               registration={register('lastName')}
-//             />
-//             <InputField
-//               type="email"
-//               label="Email Address"
-//               error={formState.errors['email']}
-//               registration={register('email')}
-//             />
-//             <InputField
-//               type="password"
-//               label="Password"
-//               error={formState.errors['password']}
-//               registration={register('password')}
-//             />
+  return (
+    <div>
+      <Form<RegisterValues, typeof schema>
+        onSubmit={async values => {
+          try {
+            await registerUserMutation.mutateAsync(values)
+            onSuccess()
+          } catch (error: any) {
+            setErrorMessage(error.response.data.message)
+          }
+        }}
+        schema={schema}
+        options={{
+          shouldUnregister: true,
+        }}>
+        {({ register, formState }) => (
+          <div
+            css={css`
+              ${tw`flex flex-col space-y-5`}
+            `}>
+            <InputField
+              type="text"
+              label="name"
+              error={formState.errors['name']}
+              registration={register('name')}
+            />
+            <InputField
+              type="email"
+              label="Email Address"
+              error={formState.errors['email']}
+              registration={register('email')}
+            />
+            <InputField
+              type="password"
+              label="Password"
+              error={formState.errors['password']}
+              registration={register('password')}
+            />
+            <InputField
+              type="password"
+              label="Password Confirmation"
+              error={formState.errors['password_confirmation']}
+              registration={register('password_confirmation')}
+            />
 
-//             <Switch.Group>
-//               <div className="flex items-center">
-//                 <Switch
-//                   checked={chooseTeam}
-//                   onChange={setChooseTeam}
-//                   className={`${
-//                     chooseTeam ? 'bg-blue-600' : 'bg-gray-200'
-//                   } relative inline-flex items-center h-6 rounded-full w-11 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
-//                 >
-//                   <span
-//                     className={`${
-//                       chooseTeam ? 'translate-x-6' : 'translate-x-1'
-//                     } inline-block w-4 h-4 transform bg-white rounded-full transition-transform`}
-//                   />
-//                 </Switch>
-//                 <Switch.Label className="ml-4">Join Existing Team</Switch.Label>
-//               </div>
-//             </Switch.Group>
+            <div>
+              {registerUserMutation.isError ? (
+                <div
+                  css={css`
+                    ${tw`mb-3 text-red-700`}
+                  `}>
+                  {errorMessage}
+                </div>
+              ) : (
+                <></>
+              )}
+              <Button
+                isLoading={registerUserMutation.isPending}
+                type="submit"
+                className="w-full">
+                新規登録
+              </Button>
+            </div>
+          </div>
+        )}
+      </Form>
 
-//             {chooseTeam && teamsQuery.data ? (
-//               <SelectField
-//                 label="Team"
-//                 error={formState.errors['teamId']}
-//                 registration={register('teamId')}
-//                 options={teamsQuery?.data?.map((team) => ({
-//                   label: team.name,
-//                   value: team.id,
-//                 }))}
-//               />
-//             ) : (
-//               <InputField
-//                 type="text"
-//                 label="Team Name"
-//                 error={formState.errors['teamName']}
-//                 registration={register('teamName')}
-//               />
-//             )}
-//             <div>
-//               <Button isLoading={isRegistering} type="submit" className="w-full">
-//                 Register
-//               </Button>
-//             </div>
-//           </>
-//         )}
-//       </Form>
-//       <div className="mt-2 flex items-center justify-end">
-//         <div className="text-sm">
-//           <Link to="../login" className="font-medium text-blue-600 hover:text-blue-500">
-//             Log In
-//           </Link>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
+      <div css={login}>
+        <div css={login2}>
+          <Link to="/auth/login" css={loginLink}>
+            ログイン
+          </Link>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const login = css`
+  ${tw`mt-2 flex items-center justify-end`}
+`
+
+const login2 = css`
+  ${tw`text-sm`}
+`
+
+const loginLink = css`
+  ${tw`font-medium text-blue-600 hover:text-blue-500`}
+`

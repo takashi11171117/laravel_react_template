@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom'
 import * as z from 'zod'
+import tw, { css } from 'twin.macro'
 
 import { Button } from '@/components/Elements'
 import { Form, InputField } from '@/components/Form'
-import tw, { css } from 'twin.macro'
+import { useLoginMutation } from '@/features/auth/hooks/api/hooks'
+import { useState } from 'react'
 
 const schema = z.object({
   email: z
@@ -30,12 +32,20 @@ type LoginFormProps = {
 }
 
 export const LoginForm = ({ onSuccess }: LoginFormProps) => {
+  const loginMutation = useLoginMutation()
+
+  const [errorMessage, setErrorMessage] = useState('')
+
   return (
     <div>
       <Form<LoginValues, typeof schema>
         onSubmit={async values => {
-          ;() => {}
-          onSuccess()
+          try {
+            await loginMutation.mutateAsync(values)
+            onSuccess()
+          } catch (error: any) {
+            setErrorMessage(error.response.data.message)
+          }
         }}
         schema={schema}>
         {({ register, formState }) => (
@@ -56,17 +66,30 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
               registration={register('password')}
             />
             <div>
-              <Button isLoading={false} type="submit" className="w-full">
+              {loginMutation.isError ? (
+                <div
+                  css={css`
+                    ${tw`mb-3 text-red-700`}
+                  `}>
+                  {errorMessage}
+                </div>
+              ) : (
+                <></>
+              )}
+              <Button
+                isLoading={loginMutation.isPending}
+                type="submit"
+                className="w-full">
                 ログイン
               </Button>
             </div>
           </div>
         )}
       </Form>
-      <div css={register}>
-        <div css={register2}>
-          <Link to="/auth/register" css={registerLink}>
-            Register
+      <div css={login}>
+        <div css={login2}>
+          <Link to="/auth/register" css={loginLink}>
+            新規登録する
           </Link>
         </div>
       </div>
@@ -74,14 +97,14 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
   )
 }
 
-const register = css`
+const login = css`
   ${tw`mt-2 flex items-center justify-end`}
 `
 
-const register2 = css`
+const login2 = css`
   ${tw`text-sm`}
 `
 
-const registerLink = css`
+const loginLink = css`
   ${tw`font-medium text-blue-600 hover:text-blue-500`}
 `

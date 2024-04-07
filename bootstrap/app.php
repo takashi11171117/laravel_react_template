@@ -15,13 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->alias([
-            'throttle' => ThrottleRequests::class,
-        ]);
-
-        $middleware->appendToGroup('api', EnsureFrontendRequestsAreStateful::class);
-        $middleware->appendToGroup('api', 'throttle:60:1');
-        $middleware->appendToGroup('api', SubstituteBindings::class);
+        $middleware->statefulApi();
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

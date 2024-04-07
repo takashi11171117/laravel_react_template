@@ -46,6 +46,6 @@ Route::controller(PDFController::class)->group(function () {
 });
 
 
-Route::middleware(['auth:sanctum'])->get('/me', function (Request $request) {
-    return $request->user();
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/me', [UserController::class, 'me']);
 });
