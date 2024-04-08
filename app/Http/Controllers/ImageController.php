@@ -21,7 +21,6 @@ class ImageController extends Controller
         $IndexedImages = $action->handle();
 
         return new ImageCollection($IndexedImages);
-
     }
 
     public function create()
