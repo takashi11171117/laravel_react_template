@@ -11,14 +11,14 @@ export const createTodo: MutationFunction<void, CreateTodoDTO> = async ({
   content,
 }: CreateTodoDTO) => {
   return axios
-    .post('/todos', {
-      name: name,
-      content: content,
-    })
-    .then(response => {
-      console.log(response)
-    })
-    .catch(error => {
-      console.log(error)
-    })
+  .post('/todos', {
+    name: name,
+    content: content,
+  })
+  .then(response => {
+    console.log(response)
+  })
+  .catch(error => {
+    console.log(error)
+  })
 }
