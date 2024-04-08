@@ -10,35 +10,6 @@ type User = {
   email_verified_at: string
 }
 
-const columnHelper = createColumnHelper<User>();
-
-const columns = [
-  columnHelper.accessor((row) => row.id, {
-    id: "id",
-    cell: (info) => <i>{info.getValue()}</i>,
-    header: (info) => <span>{info.column.id}</span>,
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor((row) => row.name, {
-    id: "name",
-    cell: (info) => <i>{info.getValue()}</i>,
-    header: (info) => <span>{info.column.id}</span>,
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor((row) => row.email, {
-    id: "email",
-    cell: (info) => <i>{info.getValue()}</i>,
-    header: (info) => <span>{info.column.id}</span>,
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor((row) => row.email_verified_at, {
-    id: "email_verified_at",
-    cell: (info) => <i>{info.getValue()}</i>,
-    header: (info) => <span>{info.column.id}</span>,
-    footer: (info) => info.column.id,
-  }),
-];
-
 const fetchUsers = async () => {
   try {
     const response = await axios.get('/users')
@@ -63,16 +34,6 @@ export const UserPagination = () => {
   if (isError) return <div>Error fetching data</div>
 
   if (data === undefined) return <div>data is undefined</div>
-
-  const users = data.data.items;
-
-  const table = useReactTable({
-    users,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
-
-  console.log(users);
 
   return (
     <div>
