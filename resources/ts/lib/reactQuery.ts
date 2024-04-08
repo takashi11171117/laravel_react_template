@@ -9,7 +9,10 @@ import { PromiseValue } from 'type-fest'
 
 const queryConfig: DefaultOptions = {
   queries: {
+    retry: false,
     refetchOnWindowFocus: false,
+  },
+  mutations: {
     retry: false,
   },
 }

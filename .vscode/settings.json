@@ -16,6 +16,7 @@
     "heroicons",
     "Heuvel",
     "hoge",
+    "hookform",
     "larastan",
     "laravel",
     "missingok",
@@ -35,6 +36,7 @@
     "tailwindcss",
     "tanstack",
     "testid",
+    "toastify",
     "todos",
     "windicss"
   ],

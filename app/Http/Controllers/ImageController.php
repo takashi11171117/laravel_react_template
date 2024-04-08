@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Image;
-use App\Models\Todo;
-use Illuminate\Http\Request;
 use App\Http\Requests\ImageRequest;
 use App\Http\Resources\Image\ImageResource;
 use App\Http\Resources\Image\ImageCollection;
@@ -21,7 +19,6 @@ class ImageController extends Controller
         $IndexedImages = $action->handle();
 
         return new ImageCollection($IndexedImages);
-
     }
 
     public function create()
