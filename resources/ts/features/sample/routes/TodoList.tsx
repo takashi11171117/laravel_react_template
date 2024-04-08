@@ -5,6 +5,7 @@ import { useFetchTodos } from '@/features/sample/hooks/viewModel/todos/useFetchT
 import { useCreateTodo } from '@/features/sample/hooks/viewModel/todos/useCreateTodo'
 import { useDeleteTodo } from '@/features/sample/hooks/viewModel/todos/useDeleteTodo'
 import { todosKeys } from '@/features/sample/hooks/api/todos/todosKeys'
+import { TanStackTable } from '@/features/sample/routes/TanStackTable'
 
 export const TodoList = () => {
   const [name, setName] = useState('')
@@ -70,6 +71,8 @@ export const TodoList = () => {
 
   console.log(data.meta)
 
+  const todosInfo = data.data.items
+
   return (
     <div>
       <h1>Todo List</h1>
@@ -96,6 +99,7 @@ export const TodoList = () => {
           </div>
         </div>
       ))}
+      <TanStackTable todosInfo={todosInfo}/>
     </div>
   )
 }
