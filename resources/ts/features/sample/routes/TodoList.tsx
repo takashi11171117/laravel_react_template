@@ -5,7 +5,7 @@ import { useFetchTodos } from '@/features/sample/hooks/viewModel/todos/useFetchT
 import { useCreateTodo } from '@/features/sample/hooks/viewModel/todos/useCreateTodo'
 import { useDeleteTodo } from '@/features/sample/hooks/viewModel/todos/useDeleteTodo'
 import { todosKeys } from '@/features/sample/hooks/api/todos/todosKeys'
-import { TanStackTable } from '@/features/sample/routes/TanStackTable'
+import { TanStackTable } from '@/components/Elements/Table/TanStackTable'
 
 export const TodoList = () => {
   const [name, setName] = useState('')
@@ -99,7 +99,7 @@ export const TodoList = () => {
           </div>
         </div>
       ))}
-      <TanStackTable todosInfo={todosInfo}/>
+      <TanStackTable todosInfo={todosInfo} />
     </div>
   )
 }

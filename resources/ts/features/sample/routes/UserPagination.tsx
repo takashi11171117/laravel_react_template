@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { axios } from '@/lib/axios'
-import { createColumnHelper, flexRender, getCoreRowModel, useReactTable, } from "@tanstack/react-table";
 
 type User = {
   id: number
