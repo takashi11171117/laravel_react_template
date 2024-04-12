@@ -4,7 +4,7 @@ import { FieldWrapper, FieldWrapperPassThroughProps } from './FieldWrapper'
 import tw, { css } from 'twin.macro'
 
 type InputFieldProps = FieldWrapperPassThroughProps & {
-  type?: 'text' | 'email' | 'password'
+  type?: 'text' | 'email' | 'password' | 'file'
   registration: Partial<UseFormRegisterReturn>
 }
 

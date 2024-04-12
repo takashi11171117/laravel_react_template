@@ -37,6 +37,7 @@ export const protectedRoutes = [
     path: '/app',
     element: <App />,
     children: [
+      /*
       { path: 'page1', element: <Page1 />, loader: guardLoader },
       { path: 'page2', element: <Page2 />, loader: guardLoader },
       { path: 'todos', element: <TodoList />, loader: guardLoader },
@@ -44,6 +45,14 @@ export const protectedRoutes = [
       { path: 'users', element: <UserPagination />, loader: guardLoader },
       { path: '', element: <Dashboard />, loader: guardLoader },
       { path: '*', element: <Navigate to="." />, loader: guardLoader },
+      */
+      { path: 'page1', element: <Page1 /> },
+      { path: 'page2', element: <Page2 /> },
+      { path: 'todos', element: <TodoList /> },
+      { path: 'todos/:id', element: <TodoDetail /> },
+      { path: 'users', element: <UserPagination /> },
+      { path: '', element: <Dashboard /> },
+      { path: '*', element: <Navigate to="." /> },
     ],
   },
 ]

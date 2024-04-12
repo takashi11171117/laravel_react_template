@@ -34,6 +34,8 @@ export const UserPagination = () => {
 
   if (data === undefined) return <div>data is undefined</div>
 
+  console.log(data.meta)
+
   return (
     <div>
       <h1>User List</h1>

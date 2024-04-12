@@ -6,6 +6,8 @@ import { useCreateTodo } from '@/features/sample/hooks/viewModel/todos/useCreate
 import { useDeleteTodo } from '@/features/sample/hooks/viewModel/todos/useDeleteTodo'
 import { todosKeys } from '@/features/sample/hooks/api/todos/todosKeys'
 import { TanStackTable } from '@/components/Elements/Table/TanStackTable'
+import { InputInfoForm } from '@/features/sample/components/InputInfoForm'
+import { TodoListItem } from '../components/TodoListItem'
 
 export const TodoList = () => {
   const [name, setName] = useState('')
@@ -22,9 +24,10 @@ export const TodoList = () => {
 
   const { data, isLoading, isError } = useFetchTodos()
 
-  const { createMutateAsync } = useCreateTodo()
+  //const { createMutateAsync } = useCreateTodo()
   const { deleteMutateAsync } = useDeleteTodo()
 
+  /*
   const handleTodoCreation = async () => {
     try {
       if (name === '') {
@@ -51,6 +54,7 @@ export const TodoList = () => {
       console.error('Todoの作成に失敗しました:', error)
     }
   }
+  */
 
   const handleTodoDeletion = async (id: number) => {
     try {
@@ -73,7 +77,7 @@ export const TodoList = () => {
   return (
     <div>
       <h1>Todo List</h1>
-      <button onClick={handleTodoCreation}>作成</button>
+      {/*<button onClick={handleTodoCreation}>作成</button>
       <label>
         名前:
         <input value={name} onChange={handleNameCreation} />
@@ -82,6 +86,10 @@ export const TodoList = () => {
         内容:
         <input value={content} onChange={handleContentCreation} />
       </label>
+      */}
+      <InputInfoForm onSuccess={() => {}} />
+      <TodoListItem todosInfo={todosInfo}/>
+      {/*
       {data.data.items.map((todo: Todo) => (
         <div key={todo.id}>
           <div>
@@ -96,6 +104,7 @@ export const TodoList = () => {
           </div>
         </div>
       ))}
+      */}
       <TanStackTable todosInfo={todosInfo} />
     </div>
   )

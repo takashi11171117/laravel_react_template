@@ -9,6 +9,9 @@ import { useUpdateImageForTodo } from '@/features/sample/hooks/viewModel/todos/u
 import { useDeleteImageForTodo } from '@/features/sample/hooks/viewModel/todos/useDeleteImageForTodo'
 import { useStorePDFForTodo } from '@/features/sample/hooks/viewModel/todos/useStorePDFForTodoMutation'
 import { todosKeys } from '@/features/sample/hooks/api/todos/todosKeys'
+import { UpdateInfoForm } from '@/features/sample/components/UpdateInfoForm'
+import { InputImageInfoForm } from '@/features/sample/components/InputImageInfoForm' 
+import { UpdateImageInfoForm } from '@/features/sample/components/UpdateImageInfoForm'
 
 export const TodoDetail = () => {
   const location = useLocation()
@@ -217,6 +220,7 @@ export const TodoDetail = () => {
       <h1>TodoDetail is here.</h1>
       <p>名前: {todo.name}</p>
       <p>内容: {todo.content}</p>
+      {/*
       <label>
         名前:
         <input value={name} onChange={handleNameCreation} />
@@ -228,12 +232,16 @@ export const TodoDetail = () => {
       <div>
         <button onClick={() => handleTodoUpdate(todo.id)}>更新</button>
       </div>
+      */}
+      <UpdateInfoForm onSuccess={() => {}} todoId={todo.id}/>
+      <InputImageInfoForm onSuccess={() => {}} todoId={todo.id} />
       <br />
       <br />
       <div>
         <button onClick={() => handlePDFForTodoStorage(todo)}>PDF作成</button>
       </div>
       <br />
+      {/*
       <form>
         <label htmlFor="image">画像</label>
         <input
@@ -267,13 +275,16 @@ export const TodoDetail = () => {
           登録する
         </button>
       </form>
+      */}
+      <InputImageInfoForm onSuccess={() => {}} todoId={todo.id}/>
       {imageInfos.map((imageInfo: Image, index: number) => (
         <div key={index}>
           <img src={imageInfo.processedFilename} />
           <p>{imageInfo.id}</p>
           <p>{imageInfo.title}</p>
           <p>{imageInfo.rawFilename}</p>
-          <label htmlFor="image">画像</label>
+          {/*
+          <label htmlFor="image">画像*****</label>
           <input
             onChange={handleImageCreation}
             type="file"
@@ -296,6 +307,9 @@ export const TodoDetail = () => {
             type="button">
             更新する
           </button>
+      */}
+          <UpdateImageInfoForm onSuccess={() => {}} todoId={todo.id} imageId={imageInfo.id}/>
+
           <br />
           <button
             onClick={() => {
