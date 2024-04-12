@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
-import { TodoInputForUpdate } from '@/features/sample/components/TodoInputForUpdate'
 import { useFetchTodo } from '@/features/sample/hooks/viewModel/todos/useFetchTodo'
 import { useUpdateTodo } from '@/features/sample/hooks/viewModel/todos/useUpdateTodo'
 import { useStoreImageForTodo } from '@/features/sample/hooks/viewModel/todos/useStoreImageForTodo'
@@ -11,7 +10,7 @@ import { useStorePDFForTodo } from '@/features/sample/hooks/viewModel/todos/useS
 import { todosKeys } from '@/features/sample/hooks/api/todos/todosKeys'
 import { UpdateInfoForm } from '@/features/sample/components/UpdateInfoForm'
 import { InputImageInfoForm } from '@/features/sample/components/InputImageInfoForm' 
-import { UpdateImageInfoForm } from '@/features/sample/components/UpdateImageInfoForm'
+import { ImageListItem } from '@/features/sample/components/ImageListItem'
 
 export const TodoDetail = () => {
   const location = useLocation()
@@ -277,13 +276,17 @@ export const TodoDetail = () => {
       </form>
       */}
       <InputImageInfoForm onSuccess={() => {}} todoId={todo.id}/>
+
+      <ImageListItem imagesInfo={imageInfos} todoId={todo.id}/>
+
+      {/* 次はここ！*/}
+      {/*
       {imageInfos.map((imageInfo: Image, index: number) => (
         <div key={index}>
           <img src={imageInfo.processedFilename} />
           <p>{imageInfo.id}</p>
           <p>{imageInfo.title}</p>
           <p>{imageInfo.rawFilename}</p>
-          {/*
           <label htmlFor="image">画像*****</label>
           <input
             onChange={handleImageCreation}
@@ -307,20 +310,21 @@ export const TodoDetail = () => {
             type="button">
             更新する
           </button>
-      */}
           <UpdateImageInfoForm onSuccess={() => {}} todoId={todo.id} imageId={imageInfo.id}/>
 
           <br />
+          <DeleteImageInfoButton todoId={todo.id} imageId={imageInfo.id}/>
           <button
             onClick={() => {
               handleImageForTodoDeletion(todo.id, imageInfo.id)
               console.log(imageInfo.id)
             }}
             type="button">
-            削除する
+            削除する_old
           </button>
         </div>
       ))}
+          */}
     </div>
   )
 }

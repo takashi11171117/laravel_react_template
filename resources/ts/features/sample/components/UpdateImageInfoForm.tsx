@@ -91,7 +91,7 @@ export const UpdateImageInfoForm = ({ onSuccess, todoId, imageId }: InputFormPro
               error={formState.errors['imageList']}
               registration={register('imageList')}
             />
-            <button type="submit">画像データを記録</button>
+            <button type="submit">画像データを更新</button>
           </div>
         )}
       </Form>
