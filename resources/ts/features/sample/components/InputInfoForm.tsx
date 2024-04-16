@@ -60,6 +60,7 @@ export const InputInfoForm = ({ onSuccess }: InputFormProps) => {
             <InputField
               type="text"
               label="やることの内容"
+              css={loginLink}
               error={formState.errors['content']}
               registration={register('content')}
             />
@@ -70,3 +71,26 @@ export const InputInfoForm = ({ onSuccess }: InputFormProps) => {
     </div>
   )
 }
+
+const password = css`
+  ${tw`mt-2 flex items-center justify-end`}
+`
+
+const password2 = css`
+  ${tw`text-sm`}
+`
+
+const login = css`
+  ${tw`mt-2 flex items-center justify-end`}
+`
+
+const login2 = css`
+  ${tw`text-sm`}
+`
+
+const loginLink = css`
+  ${tw`font-medium text-blue-600 hover:text-blue-500`}`
+
+const password1 = css`
+  ${tw`mt-2 flex items-center justify-end text-red-600`}
+`

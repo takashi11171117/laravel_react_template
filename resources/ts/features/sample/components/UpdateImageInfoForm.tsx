@@ -53,10 +53,6 @@ export const UpdateImageInfoForm = ({ onSuccess, todoId, imageId }: InputFormPro
         onSubmit={async values => {
           try {
             const {updatedTitle, updatedFilename, imageList} = values;
-            console.log(imageList[0].name);
-            console.log(updatedTitle);
-            console.log(updatedFilename);
-            console.log(imageList[0].size);
             const image = imageList[0];
             onSuccess()
 

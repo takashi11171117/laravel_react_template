@@ -1,6 +1,7 @@
 import * as z from 'zod'
 import tw, { css } from 'twin.macro'
 import { Form, InputField } from '@/components/Form'
+import { ImageInputField } from '@/components/Form/ImageInputField'
 import { useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useStoreImageForTodo } from '@/features/sample/hooks/viewModel/todos/useStoreImageForTodo'
@@ -22,7 +23,7 @@ const schema = z.object({
       { message: '有効なファイル形式は .jpg, .jpeg, .png です。' },),
   imageList: z
     .custom<FileList>()
-    .refine((imageList) => imageList?.[0]?.size > 0, { message: '画像ファイルを必ず選んでください' })
+    .refine((imageList) => imageList?.[0]?.size > 0, { message: '画像ファイルを必ず選んでくださいppp' })
     .refine((imageList) => IMAGE_TYPES.includes(imageList?.[0]?.type), {
       message: '.jpegもしくは.jpgもしくは.pngのみ可能です',
     })
@@ -65,7 +66,8 @@ export const InputImageInfoForm = ({ onSuccess, todoId }: InputFormProps) => {
           }
         }}
         schema={schema}>
-        {({ register, formState }) => (
+        {({ register, formState,watch}) => (
+          
           <div
             css={css`
               ${tw`flex flex-col space-y-5`}
@@ -82,12 +84,29 @@ export const InputImageInfoForm = ({ onSuccess, todoId }: InputFormProps) => {
               error={formState.errors['filename']}
               registration={register('filename')}
             />
+            {/*
             <InputField
               type='file'
               label='画像を選択'
               error={formState.errors['imageList']}
               registration={register('imageList')}
             />
+        */}
+        {/*
+            <ImageInputField 
+              type='file'
+              label='画像を選択 ImageInputField'
+              error={formState.errors['imageList']}
+              registration={register('imageList')}
+              />
+      */}
+              <ImageInputField 
+              type='file'
+              label='画像を選択 ImageInputField'
+              error={formState.errors['imageList']}
+              registration={register('imageList')}
+              watch={watch('imageList')}
+              />
             <button type="submit">画像データを記録</button>
           </div>
         )}
