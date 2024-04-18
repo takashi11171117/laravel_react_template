@@ -11,8 +11,64 @@ import { todosKeys } from '@/features/sample/hooks/api/todos/todosKeys'
 import { UpdateInfoForm } from '@/features/sample/components/UpdateInfoForm'
 import { InputImageInfoForm } from '@/features/sample/components/InputImageInfoForm' 
 import { ImageListItem } from '@/features/sample/components/ImageListItem'
+import { useDrag, useDrop, XYCoord } from 'react-dnd'
+import bgImage from "../../../../../storage/app/public/images/a.jpg"
+import { Container } from '../components/Container'
 
 export const TodoDetail = () => {
+
+  const ContainerStyle: React.CSSProperties = {
+    width: 500,
+    height: 500,
+    backgroundColor: "silver"
+  };
+  
+  const BoxStyle: React.CSSProperties = {
+    position: "absolute",
+    border: "1px dashed gray",
+    backgroundColor: "white",
+    padding: "0.5rem 1rem",
+    cursor: "move"
+  };
+
+  const ImageStyle: React.CSSProperties = {
+    position: "absolute",
+    border: "1px dashed gray",
+    backgroundColor: "blue",
+    padding: "0.5rem 1rem",
+    cursor: "move",
+    objectFit: 'cover'
+  };
+  
+  type Box = {
+    top: number;
+    left: number;
+  };
+
+  const [box, setBox] = useState<Box>({ top: 2400, left: 20 });
+
+  const [collected, drag, dragPreview] = useDrag(
+    {
+      type: "box",
+      item: { top: box.top, left: box.left }
+    },
+    [box]
+  );
+
+  const [collectedProps, drop] = useDrop(
+    () => ({
+      accept: "box",
+      drop(item: { top: number; left: number }, monitor) {
+        const delta = monitor.getDifferenceFromInitialOffset() as XYCoord;
+        const left = Math.round(item.left + delta.x);
+        const top = Math.round(item.top + delta.y);
+        setBox({ top, left });
+        return undefined;
+      }
+    }),
+    []
+  );
+
   const location = useLocation()
 
   const todoId = location.state.todoId as number
@@ -236,6 +292,8 @@ export const TodoDetail = () => {
       <InputImageInfoForm onSuccess={() => {}} todoId={todo.id} />
       <br />
       <br />
+      <Container/>
+      <br/>
       <div>
         <button onClick={() => handlePDFForTodoStorage(todo)}>PDF作成</button>
       </div>

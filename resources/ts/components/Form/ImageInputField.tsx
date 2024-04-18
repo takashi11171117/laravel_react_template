@@ -10,24 +10,17 @@ type InputFieldProps = FieldWrapperPassThroughProps & {
   registration: Partial<UseFormRegisterReturn>
 }
 
-type InputFieldPropsNew = FieldWrapperPassThroughProps & {
-  type?: 'text' | 'email' | 'password' | 'file'
-  registration: Partial<UseFormRegisterReturn>
-  watch: FileList
-}
 
-/*
 export const ImageInputField = (props: InputFieldProps) => {
-  */
-export const ImageInputField = (props: InputFieldPropsNew) => {
 
   const { type = 'file', label, error,registration,} = props
 
   //const { type = 'file', label, error,registration,watch} = props
 
+  /*
   const fileInput = useRef<HTMLInputElement | null>(null);
-
   const [fileName, setFileName] = useState<String|undefined>("選択したファイル名が表示されます");
+  */
 
   /*
   const [fileName, setFileName] = useState<String|undefined>("選択したファイル名が表示されます");
@@ -39,11 +32,13 @@ export const ImageInputField = (props: InputFieldPropsNew) => {
   }
   */
 
+  /*
   const { ref, ...rest } = {...registration}
 
   if(ref === undefined){
     return;
   }
+  */
 
   /*
   if(watch === undefined){
@@ -73,7 +68,9 @@ export const ImageInputField = (props: InputFieldPropsNew) => {
   return (
     <div>
       <FieldWrapper label={label} error={error}>
-          <input id="file_upload" type={type} css={inputM} ref={(e) => {ref(e); fileInput.current = e;}}  {...rest} />
+          {/*<input id="file_upload" type={type} css={inputM} ref={(e) => {ref(e); fileInput.current = e;}}  {...rest} />*/}
+          <input id="file_upload" type={type} css={inputM} {...registration} />
+          {/*
           <div css={flexWrapper} >
             <button type='button' css={button} onClick={(e) => {
                 if (fileInput) {
@@ -89,6 +86,7 @@ export const ImageInputField = (props: InputFieldPropsNew) => {
             </button>
             <p id="showFileNamePara" css={inputFB}>{fileName}</p>
           </div>
+            */}
       </FieldWrapper>      
     </div>
   )
