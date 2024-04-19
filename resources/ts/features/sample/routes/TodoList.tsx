@@ -77,34 +77,8 @@ export const TodoList = () => {
   return (
     <div>
       <h1>Todo List</h1>
-      {/*<button onClick={handleTodoCreation}>作成</button>
-      <label>
-        名前:
-        <input value={name} onChange={handleNameCreation} />
-      </label>
-      <label>
-        内容:
-        <input value={content} onChange={handleContentCreation} />
-      </label>
-      */}
       <InputInfoForm onSuccess={() => {}} />
       <TodoListItem todosInfo={todosInfo}/>
-      {/*
-      {data.data.items.map((todo: Todo) => (
-        <div key={todo.id}>
-          <div>
-            <p>{todo.id}</p>
-            <Link to={`/app/todos/${todo.id}`} state={{ todoId: todo.id }}>
-              {todo.name}
-            </Link>
-            <p>{todo.content}</p>
-          </div>
-          <div>
-            <button onClick={() => handleTodoDeletion(todo.id)}>削除</button>
-          </div>
-        </div>
-      ))}
-      */}
       <TanStackTable todosInfo={todosInfo} />
     </div>
   )

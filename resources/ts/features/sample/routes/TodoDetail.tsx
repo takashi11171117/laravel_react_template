@@ -17,62 +17,11 @@ import { Container } from '../components/Container'
 
 export const TodoDetail = () => {
 
-  const ContainerStyle: React.CSSProperties = {
-    width: 500,
-    height: 500,
-    backgroundColor: "silver"
-  };
-  
-  const BoxStyle: React.CSSProperties = {
-    position: "absolute",
-    border: "1px dashed gray",
-    backgroundColor: "white",
-    padding: "0.5rem 1rem",
-    cursor: "move"
-  };
-
-  const ImageStyle: React.CSSProperties = {
-    position: "absolute",
-    border: "1px dashed gray",
-    backgroundColor: "blue",
-    padding: "0.5rem 1rem",
-    cursor: "move",
-    objectFit: 'cover'
-  };
-  
-  type Box = {
-    top: number;
-    left: number;
-  };
-
-  const [box, setBox] = useState<Box>({ top: 2400, left: 20 });
-
-  const [collected, drag, dragPreview] = useDrag(
-    {
-      type: "box",
-      item: { top: box.top, left: box.left }
-    },
-    [box]
-  );
-
-  const [collectedProps, drop] = useDrop(
-    () => ({
-      accept: "box",
-      drop(item: { top: number; left: number }, monitor) {
-        const delta = monitor.getDifferenceFromInitialOffset() as XYCoord;
-        const left = Math.round(item.left + delta.x);
-        const top = Math.round(item.top + delta.y);
-        setBox({ top, left });
-        return undefined;
-      }
-    }),
-    []
-  );
-
   const location = useLocation()
 
   const todoId = location.state.todoId as number
 
+  /*
   const [name, setName] = useState('')
   const handleNameCreation = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value)
@@ -109,19 +58,22 @@ export const TodoDetail = () => {
   }
 
   const [updatedTitle, setUpdatedTitle] = useState('')
-
   const [updatedFilename, setUpdatedFilename] = useState('')
+  */
 
+  /*
   const handleUpdatedImageInfo = (title: string, filename: string) => {
     setUpdatedTitle(title)
     setUpdatedFilename(filename)
     console.log(`updatedTitle: ${title}---updatedFilename: ${filename}`)
   }
+  */
 
   const queryClient = useQueryClient()
 
   const { todo, isLoading, isError } = useFetchTodo(todoId)
 
+  /*
   const { updateTodoMutateAsync } = useUpdateTodo()
 
   const { storeImageForTodoMutateAsync } = useStoreImageForTodo()
@@ -130,8 +82,11 @@ export const TodoDetail = () => {
 
   const { deleteImageForTodoMutateAsync } = useDeleteImageForTodo()
 
+  */
+
   const { storePDFForTodoMutateAsync } = useStorePDFForTodo()
 
+  /*
   const handleTodoUpdate = async (id: number) => {
     try {
       if (name === '') {
@@ -155,7 +110,9 @@ export const TodoDetail = () => {
       console.error('Todoの更新に失敗しました:', error)
     }
   }
+  */
 
+  /*
   const handleImageForTodoStorage = async (id: number) => {
     try {
       if (title.length > 10) {
@@ -185,6 +142,7 @@ export const TodoDetail = () => {
       console.error('Todoの画像保存に失敗しました:', error)
     }
   }
+  */
 
   const handlePDFForTodoStorage = async (todo: Todo) => {
     try {
@@ -199,6 +157,7 @@ export const TodoDetail = () => {
     }
   }
 
+  /*
   const handleImageForTodoUpdate = async (todoId: number, imageId: number) => {
     try {
       if (updatedTitle.length > 10) {
@@ -231,7 +190,9 @@ export const TodoDetail = () => {
       console.error('画像テーブルデータ更新に失敗しました:', error)
     }
   }
+  */
 
+  /*
   const handleImageForTodoDeletion = async (
     todoId: number,
     imageId: number,
@@ -244,6 +205,7 @@ export const TodoDetail = () => {
       console.error('画像テーブルデータ削除に失敗しました:', error)
     }
   }
+  */
 
   if (isLoading) return <div>Loading...</div>
   if (isError) return <div>Error fetching data</div>
@@ -275,116 +237,20 @@ export const TodoDetail = () => {
       <h1>TodoDetail is here.</h1>
       <p>名前: {todo.name}</p>
       <p>内容: {todo.content}</p>
-      {/*
-      <label>
-        名前:
-        <input value={name} onChange={handleNameCreation} />
-      </label>
-      <label>
-        内容:
-        <input value={content} onChange={handleContentCreation} />
-      </label>
-      <div>
-        <button onClick={() => handleTodoUpdate(todo.id)}>更新</button>
-      </div>
-      */}
+
       <UpdateInfoForm onSuccess={() => {}} todoId={todo.id}/>
       <InputImageInfoForm onSuccess={() => {}} todoId={todo.id} />
       <br />
       <br />
-      <Container/>
+      <Container todoId={todo.id}/>
       <br/>
       <div>
         <button onClick={() => handlePDFForTodoStorage(todo)}>PDF作成</button>
       </div>
       <br />
-      {/*
-      <form>
-        <label htmlFor="image">画像</label>
-        <input
-          onChange={handleImageCreation}
-          type="file"
-          id="image"
-          name="image"
-          required
-          accept="image/png, image/jpeg, image/jpg"
-        />
-        <label htmlFor="title">タイトル</label>
-        <input
-          value={title}
-          onChange={handleImageTitleCreation}
-          type="text"
-          id="title"
-          name="title"
-        />
-        <label htmlFor="imageFileName">ファイル名</label>
-        <input
-          value={filename}
-          onChange={handleImageFileNameCreation}
-          type="text"
-          id="filename"
-          name="filename"
-          required
-        />
-        <button
-          onClick={() => handleImageForTodoStorage(todo.id)}
-          type="button">
-          登録する
-        </button>
-      </form>
-      */}
-      {/*
-      <InputImageInfoForm onSuccess={() => {}} todoId={todo.id}/>
-    */}
-
+      
       <ImageListItem imagesInfo={imageInfos} todoId={todo.id}/>
 
-      {/* 次はここ！*/}
-      {/*
-      {imageInfos.map((imageInfo: Image, index: number) => (
-        <div key={index}>
-          <img src={imageInfo.processedFilename} />
-          <p>{imageInfo.id}</p>
-          <p>{imageInfo.title}</p>
-          <p>{imageInfo.rawFilename}</p>
-          <label htmlFor="image">画像*****</label>
-          <input
-            onChange={handleImageCreation}
-            type="file"
-            id="image"
-            name="image"
-            required
-            accept="image/png, image/jpeg, image/jpg"
-          />
-          <TodoInputForUpdate
-            updatedTitle={updatedTitle}
-            updatedFilename={updatedFilename}
-            title={imageInfo.title}
-            filename={imageInfo.rawFilename}
-            handleOnClick={handleUpdatedImageInfo}
-            setUpdatedTitle={setUpdatedTitle}
-            setUpdatedFilename={setUpdatedFilename}
-          />
-          <button
-            onClick={() => handleImageForTodoUpdate(todo.id, imageInfo.id)}
-            type="button">
-            更新する
-          </button>
-          <UpdateImageInfoForm onSuccess={() => {}} todoId={todo.id} imageId={imageInfo.id}/>
-
-          <br />
-          <DeleteImageInfoButton todoId={todo.id} imageId={imageInfo.id}/>
-          <button
-            onClick={() => {
-              handleImageForTodoDeletion(todo.id, imageInfo.id)
-              console.log(imageInfo.id)
-            }}
-            type="button">
-            削除する_old
-          </button>
-        </div>
-      ))}
-          */}
     </div>
   )
 }

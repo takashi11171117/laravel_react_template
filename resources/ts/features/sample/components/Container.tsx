@@ -1,18 +1,24 @@
 import type { FC } from 'react'
 import { useCallback, useState } from 'react'
-
 import { FileList } from './FileList'
 import { TargetBox } from './TargetBox'
 
-export const Container: FC = () => {
+interface ContainerProps {
+  todoId: number;
+}
+
+export const Container: FC<ContainerProps> = ( props ) => {
+
   const [droppedFiles, setDroppedFiles] = useState<File[]>([])
+
+  const { todoId } = props
 
   const handleFileDrop = useCallback(
     (item: { files: any[] }) => {
       if (item) {
         const files = item.files
+        const image = files;
         setDroppedFiles(files)
-        
       }
     },
     [setDroppedFiles],
@@ -20,7 +26,7 @@ export const Container: FC = () => {
 
   return (
     <>
-      <TargetBox onDrop={handleFileDrop} />
+      <TargetBox onDrop={handleFileDrop} todoId={todoId} />
       <FileList files={droppedFiles} />
     </>
   )
