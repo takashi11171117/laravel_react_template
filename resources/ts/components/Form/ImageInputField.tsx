@@ -92,6 +92,7 @@ export const ImageInputField = (props: InputFieldProps) => {
   )
 }
 
+/*
 const flexWrapper = css`
   ${tw`appearance-none block`}
   width: calc(100% - 1.5rem);
@@ -101,6 +102,7 @@ const button = css`
   ${tw`appearance-none block px-3 py-2 bg-purple-500 border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm`}
   width: calc(100% - 1.5rem);
 `
+*/
 
 const inputM = css`
   ${tw`appearance-none text-sm text-gray-500
@@ -113,12 +115,11 @@ const inputM = css`
   width: calc(100% - 1.5rem);
   //display: none;
 `
-
-
-
+/*
 const inputFB = css`
 ${tw`appearance-none block bg-green-400 w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400`}
 width: calc(100% - 1.5rem);
 height: calc(5rem);
 `
+*/
 

@@ -1,4 +1,5 @@
 import type { CSSProperties, FC } from 'react'
+import { useState } from 'react'
 import * as z from 'zod'
 import type { DropTargetMonitor } from 'react-dnd'
 import { useDrop } from 'react-dnd'
@@ -23,24 +24,51 @@ export interface TargetBoxProps {
 export const TargetBox: FC<TargetBoxProps> = (props) => {
   const { onDrop, todoId} = props
 
+  const [errors, setErrors] = useState(null);
+
   const { storeImageForTodoMutateAsync } = useStoreImageForTodo()
   const queryClient = useQueryClient()
+
+  const IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/jpg'];
+  
+  const schema = z.object({
+    image: z
+    .custom<File>()
+    .refine((image) => IMAGE_TYPES.includes(image.type), {
+      message: '.jpegもしくは.jpgもしくは.pngのみ可能です',
+      path: ["file_type"],
+    })
+    .refine((image) => image.size > 0, { message: '画像ファイルを必ず選んでください', path:['file_is_chosen'] })
+    .refine((image) => image.size < 50000, { message: 'ファイルサイズは最大5MBです', path: ["file_size"] })
+  })
 
   const [{ canDrop, isOver }, drop] = useDrop(
     () => ({
       accept: [NativeTypes.FILE],
-      drop(item: { files: any[] }) {
+      
+      drop(item: { files: File[] }) {
+
         const min = 1;
         const max = 1000;          
         const randomInt = Math.floor(Math.random() * (max - min + 1)) + min;
         const title = `drag${randomInt}`
         const filename = `dragged_image${randomInt}.jpg`
-        const file = item.files[0]
-        const image = file;
-        console.log(image)
+
+        const imageList = item.files
+
+        console.log(imageList[0]);
+        //console.log(typeof(item.files))
+        const result = schema.safeParse({image: item.files[0]});
+        console.log(result.success)
+        
+        if(!result.success){
+          console.log(result.error);
+        }
+
         if (onDrop) {
           onDrop(item)
         }
+
         const uploadImage = async (image:File) => {
           try {
             await storeImageForTodoMutateAsync({ title, filename, image, todoId })
@@ -49,19 +77,19 @@ export const TargetBox: FC<TargetBoxProps> = (props) => {
             
           }
         }
-        uploadImage(image);
+        uploadImage(imageList[0]);
       },
       canDrop(item: any) {
         //console.log('canDrop', item.files, item.items)
         return true
       },
       hover(item: any) {
-        console.log('hover', item.files, item.items)
+        //console.log('hover', item.files, item.items)
       },
       collect: (monitor: DropTargetMonitor) => {
         const item = monitor.getItem() as any
         if (item) {
-          console.log('collect', item.files, item.items)
+          //console.log('collect', item.files, item.items)
         }
 
         return {

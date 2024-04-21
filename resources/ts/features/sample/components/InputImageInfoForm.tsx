@@ -6,7 +6,6 @@ import { useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useStoreImageForTodo } from '@/features/sample/hooks/viewModel/todos/useStoreImageForTodo'
 import { todosKeys } from '@/features/sample/hooks/api/todos/todosKeys'
-import { Container } from './Container'
 
 const IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/jpg'];
 
@@ -85,28 +84,12 @@ export const InputImageInfoForm = ({ onSuccess, todoId }: InputFormProps) => {
               error={formState.errors['filename']}
               registration={register('filename')}
             />
-            {/*
-            <InputField
-              type='file'
-              label='画像を選択'
-              error={formState.errors['imageList']}
-              registration={register('imageList')}
-            />
-        */}
-        {/*
             <ImageInputField 
-              type='file'
-              label='画像を選択 ImageInputField'
-              error={formState.errors['imageList']}
-              registration={register('imageList')}
-              />
-      */}
-              <ImageInputField 
-              type='file'
-              label='画像を選択 ImageInputField'
-              error={formState.errors['imageList']}
-              registration={register('imageList')}
-              />
+            type='file'
+            label='画像を選択 ImageInputField'
+            error={formState.errors['imageList']}
+            registration={register('imageList')}
+            />
 
             <button type="submit">画像データを記録</button>
           </div>
