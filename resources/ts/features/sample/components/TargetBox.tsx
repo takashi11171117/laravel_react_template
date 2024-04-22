@@ -39,7 +39,7 @@ export const TargetBox: FC<TargetBoxProps> = (props) => {
       path: ["file_type"],
     })
     .refine((image) => image.size > 0, { message: '画像ファイルを必ず選んでください', path:['file_is_chosen'] })
-    .refine((image) => image.size < 50000, { message: 'ファイルサイズは最大5MBです', path: ["file_size"] })
+    .refine((image) => image.size < 500000, { message: 'ファイルサイズは最大5MBです', path: ["file_size"] })
   })
 
   const [{ canDrop, isOver }, drop] = useDrop(
@@ -57,12 +57,15 @@ export const TargetBox: FC<TargetBoxProps> = (props) => {
         const imageList = item.files
 
         console.log(imageList[0]);
-        //console.log(typeof(item.files))
         const result = schema.safeParse({image: item.files[0]});
-        console.log(result.success)
+        //console.log(result.success)
         
         if(!result.success){
           console.log(result.error);
+          const errorMessage = result.error.errors.map((error) => error.message).join('\n');
+          alert(errorMessage);
+          //alert(result.error.message);
+          return;
         }
 
         if (onDrop) {
