@@ -1,14 +1,13 @@
 import type { FC } from 'react'
 import { useCallback, useState } from 'react'
-import * as z from 'zod'
-import { FileList } from './FileList'
-import { TargetBox } from './TargetBox'
+import { DragDropFileList } from '@/components/Form/DragDropInput/DragDropFileList'
+import { DragDropTargetBox } from '@/components/Form/DragDropInput/DragDropTargetBox'
 
 interface ContainerProps {
   todoId: number;
 }
 
-export const Container: FC<ContainerProps> = ( props ) => {
+export const DragDropContainer: FC<ContainerProps> = ( props ) => {
   
   const [droppedFiles, setDroppedFiles] = useState<File[]>([])
 
@@ -27,8 +26,8 @@ export const Container: FC<ContainerProps> = ( props ) => {
   
   return (
     <>
-      <TargetBox onDrop={handleFileDrop}  todoId={todoId}/>
-      <FileList files={droppedFiles} />
+      <DragDropTargetBox onDrop={handleFileDrop}  todoId={todoId}/>
+      <DragDropFileList files={droppedFiles} />
     </>
   )
 }

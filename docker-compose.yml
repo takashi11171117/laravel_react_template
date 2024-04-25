@@ -59,6 +59,10 @@ services:
       - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
     networks:
       - sail
+  nginx:
+    image: nginx:latest
+    ports:
+      - '8080:80' 
 networks:
   sail:
     driver: bridge

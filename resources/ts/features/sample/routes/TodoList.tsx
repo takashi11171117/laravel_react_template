@@ -1,70 +1,14 @@
-import { useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
-import { Link } from 'react-router-dom'
 import { useFetchTodos } from '@/features/sample/hooks/viewModel/todos/useFetchTodos'
-import { useCreateTodo } from '@/features/sample/hooks/viewModel/todos/useCreateTodo'
-import { useDeleteTodo } from '@/features/sample/hooks/viewModel/todos/useDeleteTodo'
-import { todosKeys } from '@/features/sample/hooks/api/todos/todosKeys'
 import { TanStackTable } from '@/components/Elements/Table/TanStackTable'
 import { InputInfoForm } from '@/features/sample/components/InputInfoForm'
 import { TodoListItem } from '../components/TodoListItem'
 
 export const TodoList = () => {
-  const [name, setName] = useState('')
-  const handleNameCreation = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value)
-  }
-
-  const [content, setContent] = useState('')
-  const handleContentCreation = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setContent(e.target.value)
-  }
-
+  
   const queryClient = useQueryClient()
 
   const { data, isLoading, isError } = useFetchTodos()
-
-  //const { createMutateAsync } = useCreateTodo()
-  const { deleteMutateAsync } = useDeleteTodo()
-
-  /*
-  const handleTodoCreation = async () => {
-    try {
-      if (name === '') {
-        alert('名前は必ず入力して下さい')
-        return
-      }
-      if (name.length > 10) {
-        console.log(name.length)
-        alert('名前は必ず10文字以下にして下さい')
-        return
-      }
-      if (content.length > 50) {
-        alert('内容は必ず50文字以下にして下さい')
-        return
-      }
-
-      await createMutateAsync({ name, content })
-
-      setName('')
-      setContent('')
-
-      await queryClient.invalidateQueries({ queryKey: todosKeys.all })
-    } catch (error) {
-      console.error('Todoの作成に失敗しました:', error)
-    }
-  }
-  */
-
-  const handleTodoDeletion = async (id: number) => {
-    try {
-      await deleteMutateAsync({ id })
-
-      await queryClient.invalidateQueries({ queryKey: todosKeys.all })
-    } catch (error) {
-      console.error('Todoの削除に失敗しました:', error)
-    }
-  }
 
   if (isLoading) return <div>Loading...</div>
   if (isError) return <div>Error fetching data</div>

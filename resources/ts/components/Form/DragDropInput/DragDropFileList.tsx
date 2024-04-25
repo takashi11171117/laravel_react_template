@@ -11,7 +11,7 @@ function list(files: File[]) {
   return files.map((file) => <div><li key={file.name}>{label(file)}</li><p>{file.size}</p></div>)
 }
 
-export const FileList: FC<FileListProps> = ({ files }) => {
+export const DragDropFileList: FC<FileListProps> = ({ files }) => {
   if (files.length === 0) {
     return <div>Nothing to display</div>
   }

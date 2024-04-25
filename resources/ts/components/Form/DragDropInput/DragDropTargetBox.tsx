@@ -21,7 +21,7 @@ export interface TargetBoxProps {
   todoId: number
 }
 
-export const TargetBox: FC<TargetBoxProps> = (props) => {
+export const DragDropTargetBox: FC<TargetBoxProps> = (props) => {
   const { onDrop, todoId} = props
 
   const [errors, setErrors] = useState(null);
