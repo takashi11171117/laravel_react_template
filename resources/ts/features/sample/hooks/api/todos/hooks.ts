@@ -4,7 +4,7 @@ import { storeImageForTodo } from '@/features/sample/hooks/api/todos/storeImageF
 import { updateImageForTodo } from '@/features/sample/hooks/api/todos/updateImageForTodo'
 import { deleteImageForTodo } from '@/features/sample/hooks/api/todos/deleteImageForTodo'
 import { storePDFForTodo } from '@/features/sample/hooks/api/todos/storePDFForTodo'
-import { fetchTodos } from '@/features/sample/hooks/api/todos/fetchTodos'
+import { fetchTodos, fetchTodosPaginated } from '@/features/sample/hooks/api/todos/fetchTodos'
 import {
   FetchTodoDTO,
   fetchTodo,
@@ -26,6 +26,14 @@ export const useTodosQuery = (options?: FetchTodosOptions) => {
   return useQuery<ExtractFnReturnType<FetchTodosFnType>>({
     queryKey: todosKeys.all,
     queryFn: fetchTodos,
+    ...options,
+  })
+}
+
+export const useTodosQueryPaginated = (page: number, pageSize: number, options?: FetchTodosOptions) => {
+  return useQuery<ExtractFnReturnType<FetchTodosFnType>>({
+    queryKey: todosKeys.all,
+    queryFn: () => fetchTodosPaginated(page,pageSize),
     ...options,
   })
 }
