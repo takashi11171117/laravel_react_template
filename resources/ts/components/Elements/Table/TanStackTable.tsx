@@ -19,12 +19,42 @@ import {
   TiArrowUnsorted,
 } from 'react-icons/ti'
 import tw, { css, styled } from 'twin.macro'
-import { useFetchTodos, useFetchTodosPaginated } from '@/features/sample/hooks/viewModel/todos/useFetchTodos'
+import { 
+  useFetchTodosPaginatedSortedFiltered
+} from '@/features/sample/hooks/viewModel/todos/useFetchTodos'
 
 type tableProps = {
   todosInfo: Todo[]
   todosTotal: number
 }
+
+const initialPageIndex = 0
+const initialPageSize = 3
+
+
+export const TanStackTable = ({ todosInfo, todosTotal }: tableProps) => {
+
+  const [page, setPage] = useState<number>(0);
+
+  const [pageSize, setPageSize] = useState<number>(3);
+
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc' >('asc');
+
+  const [keyword, setKeyword] = useState<string >("");
+
+  const queryClient = useQueryClient()
+
+  const toggleSortOrder = async () => {
+    await setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    await queryClient.invalidateQueries();
+  };
+
+  const filterTodos = async (filteringWord: string) => {
+    console.log(filteringWord)
+    await setKeyword(filteringWord);
+    await queryClient.invalidateQueries();
+  };
+
 
 const sortableHeader =
   (headerName: string) =>
@@ -32,7 +62,8 @@ const sortableHeader =
     return (
       <div
         style={{ flex: 'auto', alignItems: 'center', cursor: 'pointer' }}
-        onClick={column.getToggleSortingHandler()}>
+        onClick={toggleSortOrder}
+        >
         {headerName}
         {getSortIcon(column.getIsSorted())}
       </div>
@@ -111,14 +142,6 @@ const getSortIcon = (sortDirection: false | SortDirection): JSX.Element => {
   }
 }
 
-export const TanStackTable = ({ todosInfo, todosTotal }: tableProps) => {
-
-  const [page, setPage] = useState<number>(0);
-
-  const [pageSize, setPageSize] = useState<number>(3);
-
-  const queryClient = useQueryClient()
-
   const table = useReactTable({
     data: [],
     columns,
@@ -127,27 +150,27 @@ export const TanStackTable = ({ todosInfo, todosTotal }: tableProps) => {
         pageIndex: initialPageIndex,
         pageSize: initialPageSize,
       },
-      sorting: [{ id: 'id', desc: true }],
     },
     rowCount: todosTotal,
     manualPagination: true,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
   })
 
-  const { data, isLoading, isError } = useFetchTodosPaginated(page+1,pageSize)
+  const { data, isLoading, isError } = useFetchTodosPaginatedSortedFiltered(page+1,pageSize, 'id', sortOrder, keyword)
 
   if (isLoading) return <div>Loading...</div>
   if (isError) return <div>Error fetching data</div>
   if (data === undefined) return <div>data is undefined</div>
 
-  const todosTotalM = data.meta.total
-  
-  console.log(`todosTotalM = ${todosTotalM}`)
-  console.log(data.meta.last_page)
+  const todosTotalFiltered = data.meta.total
+  console.log(`todosTotalFiltered = ${todosTotalFiltered}`)
 
+  const todosInfoFiltered = data.data.items
+  console.log(`todosInfoFiltered = ${todosInfoFiltered}`)
+
+  const todosTotalM = data.meta.total
   const todosInfoM = data.data.items
 
   const pageSizeVariationArray = [3,4,5]
@@ -161,7 +184,6 @@ export const TanStackTable = ({ todosInfo, todosTotal }: tableProps) => {
         pageIndex: 0,
         pageSize: pageSizeVariationArray[1],
       },
-      sorting: [{ id: 'id', desc: true }],
     },
   };
 
@@ -276,21 +298,36 @@ export const TanStackTable = ({ todosInfo, todosTotal }: tableProps) => {
           {'>'}
         </button>
         arrow
+        <br/>
+        {/*
+        filtering
         <div style={{ padding: '10px' }}>
           <input
             placeholder="Filter name..."
             value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
             onChange={e =>
-              table.getColumn('name')?.setFilterValue(e.target.value)
+              //table.getColumn('name')?.setFilterValue(e.target.value);
+              filterTodos(e.target.value)
             }
           />
         </div>
+          <div style={{ padding: '10px' }}>
+          <input
+            placeholder="Filter name..."
+            value={keyword}
+            onChange={e =>
+              filterTodos(e.target.value)
+            }
+          />
+          </div>
+          */}
       </div>
       ここから表の区画
       <Table>
         <thead>
           {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>
+
               {headerGroup.headers.map(header => (
                 <th key={header.id} colSpan={header.colSpan}>
                   {header.isPlaceholder
@@ -301,6 +338,7 @@ export const TanStackTable = ({ todosInfo, todosTotal }: tableProps) => {
                       )}
                 </th>
               ))}
+
             </tr>
           ))}
         </thead>
@@ -323,6 +361,17 @@ export const TanStackTable = ({ todosInfo, todosTotal }: tableProps) => {
           })}
         </tbody>
       </Table>
+      filtering
+      <div style={{ padding: '10px' }}>
+        <input
+          placeholder="Filter name..."
+          value={keyword}
+          onChange={e =>
+            filterTodos(e.target.value)
+          }
+        />
+      </div>
+
     </div>
   )
 }

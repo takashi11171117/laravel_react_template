@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query'
-import { useFetchTodosPaginated } from '@/features/sample/hooks/viewModel/todos/useFetchTodos'
+import { useFetchTodosPaginated,useFetchTodosPaginatedSorted } from '@/features/sample/hooks/viewModel/todos/useFetchTodos'
 import { TanStackTable } from '@/components/Elements/Table/TanStackTable'
 import { InputInfoForm } from '@/features/sample/components/InputInfoForm'
 import { TodoListItem } from '../components/TodoListItem'
@@ -9,7 +9,9 @@ export const TodoList = () => {
   
   const queryClient = useQueryClient()
 
-  const { data, isLoading, isError } = useFetchTodosPaginated(1,3)
+  //const { data, isLoading, isError } = useFetchTodosPaginated(1,3)
+
+  const { data, isLoading, isError } = useFetchTodosPaginatedSorted(1,3,'id', 'asc')
 
   if (isLoading) return <div>Loading...</div>
   if (isError) return <div>Error fetching data</div>
@@ -18,6 +20,8 @@ export const TodoList = () => {
   const todosTotal = data.meta.total
 
   const todosInfo = data.data.items
+
+  console.log(data.data.items)
 
   return (
     <div>
