@@ -299,28 +299,6 @@ const getSortIcon = (sortDirection: false | SortDirection): JSX.Element => {
         </button>
         arrow
         <br/>
-        {/*
-        filtering
-        <div style={{ padding: '10px' }}>
-          <input
-            placeholder="Filter name..."
-            value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
-            onChange={e =>
-              //table.getColumn('name')?.setFilterValue(e.target.value);
-              filterTodos(e.target.value)
-            }
-          />
-        </div>
-          <div style={{ padding: '10px' }}>
-          <input
-            placeholder="Filter name..."
-            value={keyword}
-            onChange={e =>
-              filterTodos(e.target.value)
-            }
-          />
-          </div>
-          */}
       </div>
       ここから表の区画
       <Table>

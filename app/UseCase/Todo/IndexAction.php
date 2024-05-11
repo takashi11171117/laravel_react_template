@@ -13,21 +13,16 @@ class IndexAction
     public function handle(PaginateRequest $request): LengthAwarePaginator
     {
         $keyword = $request->input('keyword', "");
-        $perPage = $request->input('per_page',3);
+        $perPage = $request->input('per_page', config('constants.PER_PAGE'));
+        $sortBy = $request->input('sort_by', config('constants.SORT_BY'));
+        $sortOrder = $request->input('sort_order', config('constants.SORT_ORDER'));
 
-        if(empty($keyword)){
-            $todos = Todo::paginate($perPage ?? config('constants.PER_PAGE'));
+
+        if (empty($keyword)) {
+            $todos = Todo::orderBy($sortBy, $sortOrder)->paginate($perPage);
         }
         else{
-            $todos = Todo::where('name', 'like', '%'.$keyword.'%')->paginate($perPage ?? config('constants.PER_PAGE'));
-        }
-
-        $sortOrder = $request->input('sort_order', 'asc');
-
-        if($sortOrder === 'desc'){
-            $todosItems = $todos->items();
-            $sortedItems = collect($todosItems)->sortByDesc('id')->values();
-            $todos->setCollection($sortedItems);
+            $todos = Todo::where('name', 'like', '%'.$keyword.'%')->orderBy($sortBy, $sortOrder)->paginate($perPage);
         }
 
         return $todos;
