@@ -8,6 +8,8 @@ import { queryClient } from '@/lib/reactQuery'
 import { Button, Spinner } from '@/components/Elements'
 import tw, { css } from 'twin.macro'
 import { appRoutes } from '@/routes'
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 const ErrorFallback = () => {
   return (
@@ -47,6 +49,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
         </div>
       }>
       <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <DndProvider backend={HTML5Backend}>
         <QueryClientProvider client={queryClient}>
           <ToastContainer
             autoClose={3000}
@@ -61,6 +64,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
           />
           <RouterProvider router={appRoutes()} />
         </QueryClientProvider>
+        </DndProvider>
       </ErrorBoundary>
     </React.Suspense>
   )

@@ -32,6 +32,7 @@ export const FieldWrapper = (props: FieldWrapperProps) => {
   )
 }
 
+
 const labelStyle = css`
   ${tw`font-medium text-blue-600 hover:text-blue-500`}
 `
@@ -39,3 +40,13 @@ const labelStyle = css`
 const alert = css`
   ${tw`text-sm font-semibold text-red-500`}
 `
+/*
+
+const labelStyle = css`
+  ${tw`block mb-2 text-sm font-medium text-gray-900 dark:text-white hover:text-blue-500`}
+`
+
+const alert = css`
+  ${tw`text-sm font-semibold text-red-500`}
+`
+*/

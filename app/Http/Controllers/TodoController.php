@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Http\Request;
 use App\Http\Requests\TodoRequest;
 use App\Http\Requests\ImageRequest;
 use App\Http\Requests\PDFRequest;
@@ -22,10 +23,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class TodoController extends Controller
 {
-
     public function index(PaginateRequest $request, IndexAction $action)
     {
-        $todos = $action->handle($request->per_page);
+        $todos = $action->handle($request);
 
         return new TodoCollection($todos);
     }

@@ -4,7 +4,12 @@ import { storeImageForTodo } from '@/features/sample/hooks/api/todos/storeImageF
 import { updateImageForTodo } from '@/features/sample/hooks/api/todos/updateImageForTodo'
 import { deleteImageForTodo } from '@/features/sample/hooks/api/todos/deleteImageForTodo'
 import { storePDFForTodo } from '@/features/sample/hooks/api/todos/storePDFForTodo'
-import { fetchTodos } from '@/features/sample/hooks/api/todos/fetchTodos'
+import { 
+  fetchTodos, 
+  fetchTodosPaginated,
+  fetchTodosPaginatedSorted,
+  fetchTodosFiltered,
+  fetchTodosPaginatedSortedFiltered } from '@/features/sample/hooks/api/todos/fetchTodos'
 import {
   FetchTodoDTO,
   fetchTodo,
@@ -29,6 +34,39 @@ export const useTodosQuery = (options?: FetchTodosOptions) => {
     ...options,
   })
 }
+
+export const useTodosQueryPaginated = (page: number, pageSize: number, options?: FetchTodosOptions) => {
+  return useQuery<ExtractFnReturnType<FetchTodosFnType>>({
+    queryKey: todosKeys.all,
+    queryFn: () => fetchTodosPaginated(page,pageSize),
+    ...options,
+  })
+}
+
+export const useTodosQueryPaginatedSorted = (page: number, pageSize: number, sortBy: string, sortOrder: 'asc' | 'desc' = 'asc' , options?: FetchTodosOptions) => {
+  return useQuery<ExtractFnReturnType<FetchTodosFnType>>({
+    queryKey: todosKeys.all,
+    queryFn: () => fetchTodosPaginatedSorted(page,pageSize,sortBy, sortOrder),
+    ...options,
+  })
+}
+
+export const useTodosQueryFiltered = (keyword:string, options?: FetchTodosOptions) => {
+  return useQuery<ExtractFnReturnType<FetchTodosFnType>>({
+    queryKey: todosKeys.all,
+    queryFn: () => fetchTodosFiltered(keyword),
+    ...options,
+  })
+}
+
+export const useTodosQueryPaginatedSortedFiltered = (page: number, pageSize: number, sortBy: string, sortOrder: 'asc' | 'desc' = 'asc' , keyword:string = "", options?: FetchTodosOptions) => {
+  return useQuery<ExtractFnReturnType<FetchTodosFnType>>({
+    queryKey: todosKeys.all,
+    queryFn: () => fetchTodosPaginatedSortedFiltered(page,pageSize,sortBy, sortOrder, keyword),
+    ...options,
+  })
+}
+
 
 type CreateTodoOptions = {
   config?: MutationConfig<typeof createTodo>
